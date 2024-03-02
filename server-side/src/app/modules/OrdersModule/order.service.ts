@@ -1,6 +1,6 @@
 
 import { generateRandomOrderNumber } from "../../../utlis/randomOrderNumber";
-import transporter from "../../sendMail";
+import transporter from "../EmailModule/sendMail"
 import { TOrderRoom } from "./order.interface"
 import { OrderRoom } from "./order.model"
 
@@ -10,7 +10,7 @@ const orderRoomToDB = async(orderRoomData : TOrderRoom) => {
     // console.log(result.email)
         // Nodemailer setup
         await transporter.sendMail({
-          from: '"Uttam Kumar Saha" <mail@uttamsaha.com>',
+          from: '"Shammah Hotel" <kariuki.joseph121@gmail.com>',
           to: `${result?.email}`,
           subject: 'Booking Room Confirmed',
           text: "Your room booking is successful. Thank for ordering. @Team Hotel Redisons"
