@@ -28,7 +28,6 @@ const AllFoods = () => {
             <tr className="">
               <th></th>
               <th>Image</th>
-              <th>Food ID</th>
               <th>Food Name</th>
               <th>Price</th>
               <th>Action</th>

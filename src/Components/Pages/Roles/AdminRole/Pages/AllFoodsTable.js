@@ -1,13 +1,13 @@
 /* eslint-disable no-restricted-globals */
 import { useEffect, useState } from "react";
+import { ImPriceTags } from "react-icons/im";
 import swal from "sweetalert";
+import UpdateSingleFood from "../Modals/updateSingleFood";
 
-const AllFoodsTable = ({ food, index, setAllFoods }) => {
-  const imageStorageKey = "52a7c30a95d000395b196c985adb3c83";
-  const { img, foodId, price, name } = food;
-  const [foodIdStore, setFoodIdStore] = useState();
-  let imgUp;
-
+const AllFoodsTable = ({ food, index, setAllFoods, key }) => {
+  const {foodId, name, price, img} = food;
+  let imgUrl;
+  const [isOpen, setIsOpen] = useState(false);
   //   const handleGetUpdate = async()=> {
   //    ;
 
@@ -17,53 +17,47 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
   //   console.log('Button clicked');
   // };
 
-  const handleUpdateFoods = async (foodId) => {
-    document.getElementById("my_modal_2").showModal();
-    localStorage.setItem("foodId", foodId);
-  };
-  const handleUpdateFood = async (event) => {
-    // event.preventDefault();
-    const fName = event.target.name.value;
-    const fId = event.target.foodId.value;
-    const fPrice = event.target.price.value;
-    const image = document.querySelector("#img"); // taking image from input
-    const formData = new FormData();
-    formData.append("image", image.files[0]);
-    const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
-    await fetch(url, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data : ",data)
-        if (data.success) {
-          imgUp = data.data.url; // hosted image link;
-         
-      }
-    })
-    // console.log(fId, fName, fPrice);
+  const onUpdate = async (food) => {
+    const imageStorageKey = "52a7c30a95d000395b196c985adb3c83";
+    const {foodId, name, price, imageFormData } = food;
 
-    if (!fId || !fName || !fPrice) {
+    console.log("imageFormData", imageFormData)
+    
+    if(imageFormData.size > 0){
+      const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
+      const res = await fetch(url, {
+        method: "POST",
+        body: imageFormData,
+      });
+      const data = await res.json();
+      if(data.success){
+        imgUrl = data.data.url
+      }
+    }
+
+    if (!foodId || !name || !price) {
       alert("You must enter food id, name and price uploading image is optional");
       return;
     }
-    const updateData = {
-      foodId: fId,
-      name: fName,
-      price: fPrice,
-      img: imgUp
-    };
+
+    const data = {
+      foodId: foodId,
+      name: name,
+      price: price,
+    }
+
+    if(imgUrl != undefined){
+      data.img = imgUrl;
+    }
+
     await fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/foods/${localStorage.getItem(
-        "foodId"
-      )}`,
+      `${process.env.REACT_APP_API_SERVER_URL}/foods/${foodId}`,
       {
         method: "PUT",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify(updateData),
+        body: JSON.stringify(data),
       }
     )
       .then((res) => res.json())
@@ -76,13 +70,22 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
         });
       });
 
-    //this api is called for refresh updated
+      //this api is called for refresh updated
     fetch(
       `${process.env.REACT_APP_API_SERVER_URL}/foods/all-foods`
-    )
+      )
       .then((res) => res.json())
-      .then((data) => setAllFoods(data?.data));
-    event.target.reset();
+      .then((data) => {
+        setAllFoods(data?.data); 
+        closeUpdateModal()
+      });
+  };
+
+  const showUpdateModal = () => {
+    setIsOpen(true);
+  };
+  const closeUpdateModal = () => {
+    setIsOpen(false);
   };
 
   const handleDeleteOrder = async (foodId) => {
@@ -117,16 +120,12 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
     });
   };
 
-  //   useEffect(()=>{
-  //     fetch(`${process.env.REACT_APP_API_SERVER_URL}/products/rooms/`).then(res => res.json()).then(data => setAllRooms(data?.data))
-  //   },[setAllRooms])
   return (
     <tr>
       <th>{index + 1}</th>
       <td>
         <img className="w-10 xl:w-32 xl:h-20 rounded " src={img} alt="" />
       </td>
-      <td>{foodId}</td>
       <td>{name}</td>
       <td>Ksh. {price}</td>
       <td className="">
@@ -139,77 +138,15 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
           Delete Food
         </button>
         <button
-          onClick={() => handleUpdateFoods(foodId)}
+          onClick={() => showUpdateModal()}
           className="btn btn-success btn-sm btn-outline ml-2"
         >
           Update Food
         </button>
       </td>
-
-      <dialog id="my_modal_2" className="modal">
-        <div className="modal-box w-full mx-auto">
-          <p className="text-2xl font-bold text-center">
-            Update Food Information
-          </p>
-          <form method="dialog" onSubmit={handleUpdateFood}>
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-            <div className=" flex justify-center mt-4">
-              <div>
-                <p>Food Id: </p>
-                <input
-                  type="number"
-                  className="input input-bordered w-full max-w-xs"
-                  name="foodId"
-                  placeholder="Enter food id"
-                />
-              </div>
-            </div>
-            <div className=" flex justify-center mt-4">
-              <div>
-                <p>Food Name: </p>
-                <input
-                  type="text"
-                  className="input input-bordered w-full max-w-xs"
-                  name="name"
-                  placeholder="Enter food name"
-                />
-              </div>
-            </div>
-            <div className=" flex justify-center mt-4">
-              <div>
-                <p>Food Price: </p>
-                <input
-                  className="input input-bordered w-full max-w-md"
-                  type="number"
-                  name="price"
-                  placeholder="Enter price"
-                />
-              </div>
-            </div>
-            <div className=" flex justify-center mt-4 w-[250px] mx-auto">
-              <div>
-                <p>Update Image </p>
-                <input
-                  className="input input-bordered w-full max-w-sm outline-none border-none"
-                  name="img"
-                  id="img"
-                  type="file"
-                />
-              </div>
-            </div>
-
-            <div className="w-full flex justify-center mt-4">
-              <input
-                className="btn btn-success text-white"
-                type="submit"
-                value="Update"
-              />
-            </div>
-          </form>
-        </div>
-      </dialog>
+      
+      <UpdateSingleFood onUpdate={onUpdate} food={food} isOpen={isOpen} onClose={closeUpdateModal}/>
+      
     </tr>
   );
 };
