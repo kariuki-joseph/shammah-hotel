@@ -1,62 +1,47 @@
-/* eslint-disable no-restricted-globals */
-import { useEffect } from "react";
+import React, { useState } from "react";
 import swal from "sweetalert";
+import UpdateSingleRoom from "../Modals/updateSingleRoom";
 
 const AllRoomsTable = ({ room, index, setAllRooms }) => {
   const { img, roomId, price, name } = room;
   const imageStorageKey = "52a7c30a95d000395b196c985adb3c83";
+  
+  const [isOpen, setIsOpen] = useState(false);
+
   let imgUp;
+  
 
-  //   const handleGetUpdate = async()=> {
-  //    ;
-
-  //   }
-  const handleButtonClick = () => {
-    // Perform any additional actions before or instead of form submission
-    console.log("Button clicked");
-  };
-
-  const handleUpdateRoomInfo = (roomId) => {
-    document.getElementById("my_modal_2").showModal();
-    localStorage.setItem("roomId", roomId);
-  };
-  const handleUpdateRoom = async (event) => {
-    // event.preventDefault();
-    const rId = event.target.roomId.value;
-    const rName = event.target.name.value;
-    const rPrice = event.target.price.value;
-    const image = document.querySelector("#img"); // taking image from input
-    const formData = new FormData();
-    formData.append("image", image.files[0]);
-    const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
-    await fetch(url, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data : ",data)
-        if (data.success) {
-          imgUp = data.data.url; // hosted image link;
-         
+  // update event from updateSingleRoom.js modal
+  const onUpdate = async (room) => {
+    const { roomId, name, price, imageFormData } = room;
+    // check if imageFormData is not empty
+    if (imageFormData.size > 0) {
+      const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
+      const res = await fetch(url, {
+        method: "POST",
+        body: imageFormData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        imgUp = data.data.url; // hosted image link;
       }
-    })
+    }
 
-    if (!rId || !rName || !rPrice) {
-      alert("You must enter food id, name and price uploading image is optional");
+    if (!roomId || !name || !price) {
+      alert("You must enter room id, name and price uploading image is optional");
       return;
     }
     const updateData = {
-      roomId: rId,
-      name: rName,
-      price: rPrice,
-      img: imgUp
+      roomId: roomId,
+      name: name,
+      price: price,
     };
+    if(imgUp != undefined){
+      updateData.img = imgUp;
+    }
 
     await fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms/${localStorage.getItem(
-        "roomId"
-      )}`,
+      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms/${roomId}`,
       {
         method: "PUT",
         headers: {
@@ -64,7 +49,7 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
         },
         body: JSON.stringify(updateData),
       }
-    )
+      )
       .then((res) => res.json())
       .then((data) => {
         swal({
@@ -75,14 +60,23 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
         });
       });
 
-    //this api is called for refresh updated
+      //this api is called for refresh updated
     fetch(
       `${process.env.REACT_APP_API_SERVER_URL}/products/rooms`
-    )
+      )
       .then((res) => res.json())
       .then((data) => setAllRooms(data?.data));
-      event.target.reset();
+    }
+
+  // show update room modal
+  const showUpdateModal = () => {
+    setIsOpen(true);
   };
+
+  const closeUpdateModal = () => {
+    setIsOpen(false);
+  };
+  
 
   const handleDeleteOrder = async (roomId) => {
     // alert(`Clicked on ${roomId}`)
@@ -116,9 +110,6 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
     });
   };
 
-  //   useEffect(()=>{
-  //     fetch(`${process.env.REACT_APP_API_SERVER_URL}/products/rooms/`).then(res => res.json()).then(data => setAllRooms(data?.data))
-  //   },[setAllRooms])
   return (
     <tr>
       <th>{index + 1}</th>
@@ -138,80 +129,14 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
           Delete Room
         </button>
         <button
-          onClick={() => handleUpdateRoomInfo(roomId)}
+          onClick={() => showUpdateModal()}
           className="btn btn-success btn-sm btn-outline ml-2"
         >
           Update Room
         </button>
       </td>
 
-      <dialog id="my_modal_2" className="modal">
-        <div className="modal-box w-full mx-auto">
-          <p className="text-2xl font-bold text-center">
-            Update Room Information
-          </p>
-          <form method="dialog" onSubmit={handleUpdateRoom}>
-            <button
-              onClick={handleButtonClick}
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            >
-              ✕
-            </button>
-            <div className=" flex justify-center mt-4">
-              <div>
-                <p>Room ID: </p>
-                <input
-                  type="number"
-                  className="input input-bordered w-full max-w-xs"
-                  placeholder="Enter room id"
-                  name="roomId"
-                />
-              </div>
-            </div>
-            <div className=" flex justify-center mt-4">
-              <div>
-                <p>Room Name: </p>
-                <input
-                  type="text"
-                  className="input input-bordered w-full max-w-xs"
-                  placeholder="Enter room name"
-                  name="name"
-                />
-              </div>
-            </div>
-            <div className=" flex justify-center mt-4">
-              <div>
-                <p>Room Price: </p>
-                <input
-                  className="input input-bordered w-full max-w-xs"
-                  type="number"
-                  placeholder="Enter room price"
-                  name="price"
-                />
-              </div>
-            </div>
-            <div className=" flex justify-center mt-4 w-[250px] mx-auto">
-              <div>
-                <p>Update Image </p>
-                <input
-                  className="input input-bordered w-full max-w-sm outline-none border-none"
-                  name="img"
-                  id="img"
-                  type="file"
-                />
-              </div>
-            </div>
-
-            <div className="w-full flex justify-center mt-4">
-              <input
-                className="btn btn-success text-white"
-                type="submit"
-                value="Update"
-              />
-            </div>
-          </form>
-        </div>
-      </dialog>
+      <UpdateSingleRoom isOpen={isOpen} onClose={closeUpdateModal} onUpdate={onUpdate} room={room} />
     </tr>
   );
 };

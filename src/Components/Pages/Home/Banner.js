@@ -71,7 +71,7 @@ const Banner = () => {
         </p>
       </div>
 
-      <div className="bg-[#485B6A]/75 h-auto w-3/4 pb-6 xl:pb-0  xl:h-[180px] xl:w-1/2 mx-auto flex justify-center rounded-md flex-col xl:flex-row">
+      <div className="bg-[#485B6A]/75 h-auto w-3/4 pb-6 xl:pb-0  xl:h-[180px] xl:w-3/4 mx-auto flex justify-center rounded-md flex-col xl:flex-row">
         <div className="">
           <div className="mb-4">
             <p className="text-xl text-center xl:text-left xl:text-2xl text-white font-bold pt-4">
