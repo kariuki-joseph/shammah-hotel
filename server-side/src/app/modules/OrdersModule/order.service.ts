@@ -6,20 +6,25 @@ import { OrderRoom } from "./order.model"
 
 const orderRoomToDB = async(orderRoomData : TOrderRoom) => {
     orderRoomData.orderId = generateRandomOrderNumber();
-    const result = await OrderRoom.create(orderRoomData);
-    // console.log(result.email)
-        // Nodemailer setup
+    
+    try {
+        const result = await OrderRoom.create(orderRoomData);
+        console.log("Room created successfully. Sending email now...");
+        // console.log(result.email)
+            // Nodemailer setup
         await transporter.sendMail({
-          from: '"Shammah Hotel" <kariuki.joseph121@gmail.com>',
-          to: `${result?.email}`,
-          subject: 'Booking Room Confirmed',
-          text: "Your room booking is successful. Thank for ordering. @Team Hotel Redisons"
+            from: '"Shammah Hotel" <kariuki.joseph121@gmail.com>',
+            to: `${result?.email}`,
+            subject: 'Booking Room Confirmed',
+            text: "Your room booking is successful. Thank for ordering. @Team Hotel Redisons"
         });
-  
-        // console.log('Message sent: %s', info.messageId);
-        // console.log("result m mail:",result.email)
-    // console.log("emaiL: ",result.email)
-    return result;
+
+        return result;
+
+        } catch (error) {
+            console.log("Error sending email: ",error)
+            return error;
+        }
 }
 
 const getAllOrdersRoomFromDB = async() => {
