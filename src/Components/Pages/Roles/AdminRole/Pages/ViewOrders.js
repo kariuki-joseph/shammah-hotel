@@ -9,7 +9,7 @@ const ViewOrders = () => {
 
   useEffect(() => {
     fetch(
-      "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/orders/room-orders"
+      `${process.env.REACT_APP_API_SERVER_URL}/orders/room-orders`
     )
       .then((res) => res.json())
       .then((data) => setAllOrderData(data?.data));

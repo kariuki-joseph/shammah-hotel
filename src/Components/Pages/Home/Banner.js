@@ -45,7 +45,7 @@ const Banner = () => {
     console.log(date);
 
     await fetch(
-      `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/products/search-available-rooms?${new URLSearchParams(
+      `${process.env.REACT_APP_API_SERVER_URL}/products/search-available-rooms?${new URLSearchParams(
         date
       ).toString()}`
     )
@@ -63,11 +63,11 @@ const Banner = () => {
   return (
     <div className="banner mb-12 ">
       <div className="h-[180px] xl:h-[350px] mx-auto text-white banner-items">
-        <h1 className="text-3xl xl:text-5xl font-bold  xl:mt-10 ">
-          Hotel Radison
+        <h1 className="text-4xl xl:text-5xl font-bold  xl:mt-10 ">
+          Shammah Hotel
         </h1>
         <p className="text-4xl text-center xl:text-7xl font-bold">
-          Good Staff Place!
+        An Exceptional Hotel Experience!
         </p>
       </div>
 

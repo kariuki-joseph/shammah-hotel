@@ -6,7 +6,7 @@ const ShowAllRooms = () => {
 
   useEffect(() => {
     fetch(
-      "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/products/rooms"
+      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms`
     )
       .then((res) => res.json())
       .then((data) => setRooms(data?.data));

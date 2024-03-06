@@ -55,7 +55,7 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
       img: imgUp
     };
     await fetch(
-      `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/foods/${localStorage.getItem(
+      `${process.env.REACT_APP_API_SERVER_URL}/foods/${localStorage.getItem(
         "foodId"
       )}`,
       {
@@ -78,7 +78,7 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
 
     //this api is called for refresh updated
     fetch(
-      "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/foods/all-foods"
+      `${process.env.REACT_APP_API_SERVER_URL}/foods/all-foods`
     )
       .then((res) => res.json())
       .then((data) => setAllFoods(data?.data));
@@ -89,13 +89,13 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
     // alert(`Clicked on ${roomId}`)
     swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this imaginary file!",
+      text: "Once deleted, you will not be able to recover this!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/foods/${foodId}`;
+        const url = `${process.env.REACT_APP_API_SERVER_URL}/foods/${foodId}`;
         await fetch(url, {
           method: "DELETE",
         })
@@ -107,7 +107,7 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
 
         //this second fetched is use to refresh delete data
         await fetch(
-          "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/foods/all-foods"
+          `${process.env.REACT_APP_API_SERVER_URL}/foods/all-foods`
         )
           .then((res) => res.json())
           .then((data) => setAllFoods(data?.data));
@@ -118,7 +118,7 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
   };
 
   //   useEffect(()=>{
-  //     fetch(`https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/products/rooms/`).then(res => res.json()).then(data => setAllRooms(data?.data))
+  //     fetch(`${process.env.REACT_APP_API_SERVER_URL}/products/rooms/`).then(res => res.json()).then(data => setAllRooms(data?.data))
   //   },[setAllRooms])
   return (
     <tr>
@@ -128,7 +128,7 @@ const AllFoodsTable = ({ food, index, setAllFoods }) => {
       </td>
       <td>{foodId}</td>
       <td>{name}</td>
-      <td>{price}TK</td>
+      <td>Ksh. {price}</td>
       <td className="">
         <button
           onClick={() => {

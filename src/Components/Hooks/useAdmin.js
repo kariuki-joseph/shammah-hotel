@@ -8,7 +8,7 @@ const useAdmin = (user) => {
     console.log("user:", email);
     if (email) {
       fetch(
-        `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/users/admin/${email}`,
+        `${process.env.REACT_APP_API_SERVER_URL}/users/admin/${email}`,
         {
           method: "GET",
           headers: {

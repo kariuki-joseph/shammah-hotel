@@ -38,7 +38,7 @@ const SingleRoomDetails = () => {
     console.log(date);
 
     await fetch(
-      `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/products/search-single-available-rooms?${new URLSearchParams(
+      `${process.env.REACT_APP_API_SERVER_URL}/products/search-single-available-rooms?${new URLSearchParams(
         date
       ).toString()}`
     )
@@ -71,7 +71,7 @@ const SingleRoomDetails = () => {
 
   useEffect(() => {
     fetch(
-      `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/products/rooms/${roomId}`
+      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms/${roomId}`
     )
       .then((res) => res.json())
       .then((data) => setRoomData(data.data[0]));

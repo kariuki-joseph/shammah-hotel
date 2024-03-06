@@ -33,7 +33,7 @@ const AddRoom = () => {
 
           //send docotr info to my database
           fetch(
-            "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/products/add-room",
+            `${process.env.REACT_APP_API_SERVER_URL}/products/add-room`,
             {
               method: "POST",
               headers: {

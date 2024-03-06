@@ -33,7 +33,7 @@ const CreateFood = () => {
 
           //send docotr info to my database
           fetch(
-            "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/foods/add-food",
+            `${process.env.REACT_APP_API_SERVER_URL}/foods/add-food`,
             {
               method: "POST",
               headers: {
@@ -71,7 +71,7 @@ const CreateFood = () => {
 
       <div>
         <h2 className="text-center text-3xl font-bold m-8 text-blue-500 underline">
-          Add new Food
+          Add New Food
         </h2>
         <div className="flex justify-center">
           <form
@@ -90,7 +90,7 @@ const CreateFood = () => {
             <input
               type="text"
               name="name"
-              placeholder="Enter Room Name"
+              placeholder="Enter Food Name"
               className="input input-bordered w-full max-w-lg mb-3"
             />
             <br />
