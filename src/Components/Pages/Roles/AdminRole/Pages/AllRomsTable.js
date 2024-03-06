@@ -65,8 +65,11 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
       `${process.env.REACT_APP_API_SERVER_URL}/products/rooms`
       )
       .then((res) => res.json())
-      .then((data) => setAllRooms(data?.data));
-    }
+      .then((data) => {
+        setAllRooms(data?.data);
+        closeUpdateModal();
+      })
+    };
 
   // show update room modal
   const showUpdateModal = () => {
