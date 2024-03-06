@@ -28,7 +28,6 @@ const AllRooms = () => {
             <tr className="">
               <th></th>
               <th>Image</th>
-              <th>Room ID</th>
               <th>Room Name</th>
               <th>Price</th>
               <th>Action</th>

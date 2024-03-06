@@ -116,7 +116,6 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
       <td>
         <img className="w-28 h-20 rounded " src={img} alt="" />
       </td>
-      <td>{roomId}</td>
       <td>{name}</td>
       <td>{price}TK</td>
       <td>
