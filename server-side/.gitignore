@@ -9,3 +9,4 @@ sendMail.ts
 sendMail.js
 /dist/app/modules/sendMail.js
 dist
+src/app/modules/EmailModule/sendMail.ts
