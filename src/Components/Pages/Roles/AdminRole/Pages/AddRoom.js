@@ -8,7 +8,7 @@ const AddRoom = () => {
 
   const handleAddProduct = async (event) => {
     event.preventDefault();
-    const roomId = event.target.roomId.value;
+    const roomId = `${Math.floor(Math.random() * 1000000)+1}`
     const name = event.target.name.value;
     const price = event.target.price.value;
     const image = document.querySelector("#img"); // taking image from input
@@ -33,7 +33,7 @@ const AddRoom = () => {
 
           //send docotr info to my database
           fetch(
-            "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/products/add-room",
+            `${process.env.REACT_APP_API_SERVER_URL}/products/add-room`,
             {
               method: "POST",
               headers: {
@@ -78,14 +78,6 @@ const AddRoom = () => {
             onSubmit={handleAddProduct}
             className="shadow-2xl pl-12 pr-12 pt-6 pb-6 mt-4 mb-12 w-11/12 xl:w-[600px]"
           >
-            <label htmlFor="productName">Room ID:</label> <br />
-            <input
-              type="number"
-              name="roomId"
-              placeholder="Enter Room ID"
-              className="input input-bordered w-full max-w-lg mb-3"
-            />
-            <br />
             <label htmlFor="price">Name</label> <br />
             <input
               type="text"

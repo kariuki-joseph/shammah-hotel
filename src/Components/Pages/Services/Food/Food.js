@@ -7,7 +7,7 @@ const Food = () => {
 
   useEffect(() => {
     fetch(
-      "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/foods/all-foods"
+      `${process.env.REACT_APP_API_SERVER_URL}/foods/all-foods`
     )
       .then((res) => res.json())
       .then((data) => setFoods(data));

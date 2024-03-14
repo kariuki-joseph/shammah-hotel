@@ -35,7 +35,7 @@ const Login = () => {
     const email = event.target.email.value;
     const password = event.target.password.value;
     fetch(
-      `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/users/${email}`
+      `${process.env.REACT_APP_API_SERVER_URL}/users/${email}`
     )
       .then((res) => res.json())
       .then((data) => setUserFromDB(data?.data?.role));

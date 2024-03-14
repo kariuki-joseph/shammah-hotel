@@ -23,7 +23,7 @@ const FoodBookingPage = () => {
       img: orderData?.img,
     };
     fetch(
-      "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/order-food/create-order",
+      `${process.env.REACT_APP_API_SERVER_URL}/order-food/create-order`,
       {
         method: "POST",
         headers: {
@@ -45,7 +45,7 @@ const FoodBookingPage = () => {
   };
   useEffect(() => {
     fetch(
-      `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/foods/${foodId}`
+      `${process.env.REACT_APP_API_SERVER_URL}/foods/${foodId}`
     )
       .then((res) => res.json())
       .then((data) => setOrderData(data?.data));

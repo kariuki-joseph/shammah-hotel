@@ -15,7 +15,7 @@ const FoodOrdersTable = ({ order, index, orderData, user, setOrderData }) => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/order-food/${orderId}`;
+        const url = `${process.env.REACT_APP_API_SERVER_URL}/order-food/${orderId}`;
         await fetch(url, {
           method: "DELETE",
         })
@@ -27,7 +27,7 @@ const FoodOrdersTable = ({ order, index, orderData, user, setOrderData }) => {
 
         //this second fetched is use to refresh delete data
         await fetch(
-          `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/order-food/${user?.email}`
+          `${process.env.REACT_APP_API_SERVER_URL}/order-food/${user?.email}`
         )
           .then((res) => res.json())
           .then((data) => setOrderData(data?.data));

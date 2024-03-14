@@ -30,7 +30,7 @@ const SocialLogin = () => {
     };
     navigate(from, { replace: true } || "/"); // jekhan theke login korse se khane niye jabe
     fetch(
-      "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/users/store-user",
+      `${process.env.REACT_APP_API_SERVER_URL}/users/store-user`,
       {
         method: "POST",
         headers: {

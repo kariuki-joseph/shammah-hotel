@@ -9,7 +9,7 @@ const ManageUsers = () => {
 
   useEffect(() => {
     fetch(
-      "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/users/get-users"
+      `${process.env.REACT_APP_API_SERVER_URL}/users/get-users`
     )
       .then((res) => res.json())
       .then((data) => setUsers(data?.data));

@@ -22,25 +22,6 @@ const NavbarTwo = () => {
     }
   return (
     <div className='sticky top-0 shadow-lg z-10'>
-        <div className='h-8 bg-[#0F3048] hidden xl:block'>
-            <div className='w-[1100px] mx-auto'>
-            <div className='custom-container h-8  flex mx-auto justify-between items-center'>
-            <div className='text-white'>
-                <p>Hotel Management System</p>
-            </div>
-            <div className='flex text-white gap-4'>
-                <div className='flex items-center gap-1'>
-                    <MdOutlinePhoneCallback/>
-                    <p>+8801400014416</p>
-                </div>
-                <div className='flex items-center gap-1'>
-                    <MdMarkEmailUnread/>
-                    <p>mail@uttamsaha.com</p>
-                </div>
-            </div>
-            </div>
-            </div>
-        </div>
         <div className='bg-[#ECF0F4] shadow-md'> {/*className='bg-[#ECF0F4]'*/}
         <div className=' text-white mx-auto xl:rounded-2xl lg:px-28 z-10 sticky top-0 shadow-none py-2'>
             <nav className='flex h-[80px] w-full xl:w-[1100px] items-center justify-between custom-container mx-auto '>
@@ -57,7 +38,6 @@ const NavbarTwo = () => {
                         <Link to="/">Home</Link>
                         <Link to="/food">Foods</Link>
                         <Link to="/rooms">All Rooms</Link>
-                        <Link to="/contact">Contact</Link>
                        
                         {
                             admin ? <Link to="/admin">Admin Dashboard</Link> : <Link to="/user">Dashboard</Link>

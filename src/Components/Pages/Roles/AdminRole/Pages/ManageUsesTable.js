@@ -14,7 +14,7 @@ const ManageUsersTable = ({ user, index, setUsers }) => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        const url = `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/orders/delete-room-order/${roomId}`;
+        const url = `${process.env.REACT_APP_API_SERVER_URL}/orders/delete-room-order/${roomId}`;
         fetch(url, {
           method: "DELETE",
         })
@@ -26,7 +26,7 @@ const ManageUsersTable = ({ user, index, setUsers }) => {
 
         //this second fetched is use to refresh delete data
         fetch(
-          "https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/orders/room-orders"
+          `${process.env.REACT_APP_API_SERVER_URL}/orders/room-orders`
         )
           .then((res) => res.json())
           .then((data) => setUsers(data?.data));

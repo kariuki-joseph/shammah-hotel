@@ -13,7 +13,7 @@ const MyOrders = () => {
 
   useEffect(() => {
     fetch(
-      `https://hotel-app-radison-87fec3b45a39.herokuapp.com/api/v1/orders/room/${user?.email}`
+      `${process.env.REACT_APP_API_SERVER_URL}/orders/room/${user?.email}`
     )
       .then((res) => res.json())
       .then((data) => setOrderData(data?.data));
