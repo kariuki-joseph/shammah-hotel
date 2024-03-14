@@ -1,5 +1,5 @@
 export type TProductFood ={
-    foodId: string;
+    foodId: number;
     name: string;
     price: number;
     img: string;

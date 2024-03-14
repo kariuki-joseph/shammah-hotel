@@ -3,7 +3,7 @@ import { TProductFood } from "./food.interface";
 
 const foodSchema = new mongoose.Schema<TProductFood>({
     foodId: {
-        type: String,
+        type: Number,
         required: true,
     },
     name: {
