@@ -5,7 +5,7 @@ const addFood = async(req : Request, res : Response)=> {
     try {
     const foodData = req.body;
     const result = await FoodServices.addFoodToDB(foodData);
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Food Successfully Created",
         data: result
@@ -22,7 +22,7 @@ const addFood = async(req : Request, res : Response)=> {
 const getAllFood = async(req : Request, res : Response)=> {
     try {
     const result = await FoodServices.getAllFoodFromDB();
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Food Successfully Fetched",
         data: result
@@ -40,7 +40,7 @@ const getSingleFood = async(req : Request, res : Response)=> {
     try {
     const {foodId} = req.params;
     const result = await FoodServices.getSingleFoodFromDB(Number(foodId));
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Food Successfully Fetched",
         data: result
@@ -58,7 +58,7 @@ const deleteFood = async(req : Request, res : Response)=> {
     try {
     const {foodId} = req.params;
     const result = await FoodServices.deleteFoodFromDB(Number(foodId));
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Food Successfully deleted",
         data: result
@@ -77,7 +77,7 @@ const updateFood = async(req : Request, res : Response)=> {
     const {id} = req.params;
     const updateData = req.body;
     const result = await FoodServices.updateFoodFromDB(Number(id),updateData);
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Successfully updated",
         data: result

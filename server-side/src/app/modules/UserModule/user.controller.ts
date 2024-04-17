@@ -5,7 +5,7 @@ const StoreUser = async(req : Request, res : Response)=> {
     try {
     const userData = req.body;
     const result = await UserServices.storeUserToDB(userData);
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "User Successfully Created",
         data: result
@@ -23,7 +23,7 @@ const getSingleUser = async(req : Request, res : Response)=> {
     try {
     const {email} = req.params;
     const result = await UserServices.getSingleUserFromDB(email);
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "User fetch Successfully",
         data: result
@@ -40,7 +40,7 @@ const getSingleUser = async(req : Request, res : Response)=> {
 const getAllUsers = async(req : Request, res : Response)=> {
     try {
     const result = await UserServices.getAllUserFromDB();
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "User fetch Successfully",
         data: result

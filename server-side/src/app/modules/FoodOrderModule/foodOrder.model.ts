@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { TFoodOrder } from "./foodOrder.interface";
 
-const orderFoodSchema = new mongoose.Schema<TFoodOrder>({
+const foodOrderSchema = new mongoose.Schema<TFoodOrder>({
    foodId: {
       type: Number,
       required: true,
@@ -22,9 +22,10 @@ const orderFoodSchema = new mongoose.Schema<TFoodOrder>({
       type: Number,
       required: true
    },
-   img: {
+   imageUrl: {
       type: String,
       required: true
    }
 });
-export const OrderFood = mongoose.model<TFoodOrder>('food-order', orderFoodSchema);
+
+export const FoodOrder = mongoose.model<TFoodOrder>('food_order', foodOrderSchema);

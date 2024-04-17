@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { TOrderRoom } from "./order.interface";
+import { TRoomOrder } from "./roomOrder.interface";
 
 
-const orderRoomSchema = new mongoose.Schema<TOrderRoom>({
+const roomOrderSchema = new mongoose.Schema<TRoomOrder>({
     roomId: {
         type: Number,
         required: true,
@@ -20,11 +20,11 @@ const orderRoomSchema = new mongoose.Schema<TOrderRoom>({
         type: String,
         required: true
     },
-    startDate: {
+    checkIn: {
         type: String,
         required: true
     },
-    endDate: {
+    checkOut: {
         type: String,
         required: true
     },
@@ -32,9 +32,9 @@ const orderRoomSchema = new mongoose.Schema<TOrderRoom>({
         type: Number,
         required: true
     },
-    img: {
+    imageUrl: {
         type: String,
         required: true
     }
 });
-export const OrderRoom = mongoose.model<TOrderRoom>('order', orderRoomSchema);
+export const RoomOrder = mongoose.model<TRoomOrder>('room_order', roomOrderSchema);

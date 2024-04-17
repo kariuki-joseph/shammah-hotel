@@ -5,7 +5,7 @@ const orderFood = async(req : Request, res : Response)=> {
     try {
     const orderFoodData = req.body;
     const result = await FoodOrderServices.orderFoodToDB(orderFoodData);
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Food Successfully Ordered",
         data: result
@@ -22,7 +22,7 @@ const orderFood = async(req : Request, res : Response)=> {
 const getAllFoodOrders = async(req : Request, res : Response)=> {
     try {
     const result = await FoodOrderServices.getAllOrdersFoodFromDB();
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Fetched all food order data",
         data: result
@@ -39,7 +39,7 @@ const getFoodOrdersByEmail = async(req : Request, res : Response)=> {
     try {
     const {email} = req.params;
     const result = await FoodOrderServices.getOrderFoodByEmailFromDB(email);
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Fetched users food orders",
         data: result
@@ -59,7 +59,7 @@ const deleteFoodOrder = async(req : Request, res : Response)=> {
     console.log("orderID: ",orderId)
     // console.log(req.params)
     const result = await FoodOrderServices.deleteOrderFoodFromDB(orderId);
-    res.status(400).json({
+    res.status(200).json({
         success: true,
         message: "Food order successfully deleted",
         data: result

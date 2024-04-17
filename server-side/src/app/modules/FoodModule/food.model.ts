@@ -14,9 +14,14 @@ const foodSchema = new mongoose.Schema<TProductFood>({
         type: Number,
         required: true
     },
-    img: {
-        type: String,
-        required: true
+    quantity: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    imageUrl:{
+        type: String, 
+        required: true,
     }
 });
 export const Food = mongoose.model<TProductFood>('food', foodSchema);

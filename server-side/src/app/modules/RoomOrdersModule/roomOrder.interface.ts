@@ -1,11 +1,11 @@
-export type TOrderRoom = {
+export type TRoomOrder = {
     roomId: number;
     orderId: string;
     email: string;
     name: string;
-    startDate: string;
-    endDate: string;
+    checkIn: string;
+    checkOut: string;
     price: number;
-    img: string;
+    imageUrl: string;
 }
 

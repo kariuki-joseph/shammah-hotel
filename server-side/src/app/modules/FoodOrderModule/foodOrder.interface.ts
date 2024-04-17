@@ -4,5 +4,5 @@ export type TFoodOrder = {
     email: string;
     name: string;
     price: number;
-    img: string;
+    imageUrl: string;
 }

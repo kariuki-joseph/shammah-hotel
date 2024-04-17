@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema<TUser>({
     role: {type: String, default: "user"}
 });
 userSchema.statics.isUserExists = async function (email: string) {
-    const existingUser = await Users.findOne({ email: email });
+    const existingUser = await User.findOne({ email: email });
     return existingUser;
   };
-export const Users = mongoose.model<TUser, UserModel>('user', userSchema);
+export const User = mongoose.model<TUser, UserModel>('user', userSchema);
