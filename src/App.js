@@ -32,6 +32,7 @@ import SingleRoomDetails from './Components/Pages/Services/Rooms/SingleRoomDetai
 import FoodOrders from './Components/Pages/Roles/AdminRole/Pages/FoodOrders';
 import RequireAdmin from './Components/Pages/RequireAuth/RequireAdmin';
 import NavbarTwo from './Components/Pages/Header/NavbarTwo';
+import MakePayment from './Components/Pages/Payments/MakePayments';
 
 function App() {
   const location = useLocation();
@@ -68,6 +69,7 @@ function App() {
         <Route path='/user/my-food-orders' element={<RequireAuth><UserLayout><MyFoodOrders></MyFoodOrders></UserLayout></RequireAuth>}></Route>
         <Route path='/staff/' element={<StaffLayout><StaffDashboard></StaffDashboard></StaffLayout>}></Route>
         <Route path='/staff/view-task' element={<StaffLayout><ViewTask></ViewTask></StaffLayout>}></Route>
+        <Route path='/payments' element={<RequireAuth><MakePayment></MakePayment></RequireAuth>}></Route>
         <Route path='*' element={<NotFound></NotFound>}></Route>
       </Routes>
     </div>

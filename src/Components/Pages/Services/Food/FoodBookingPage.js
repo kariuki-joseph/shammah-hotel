@@ -1,19 +1,24 @@
 /* eslint-disable no-restricted-globals */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,  } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../../Shared/Loading";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../Firebase/firebase.init";
 import Swal from "sweetalert2";
 import axiosInstance from "../../../../axios";
+import MakePaymentModal from "../../Home/MakePaymentModal";
 
 const FoodBookingPage = () => {
   const { foodId } = useParams();
+  const navigate = useNavigate();
   const [orderData, setOrderData] = useState({});
   const [user, loading] = useAuthState(auth);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  console.log("ox: ", orderData);
+  const openPaymentModal = () => {
+    setIsPaymentModalOpen(true);
+  };
 
   const handleOrder = async () => {
     const orderFood = {
@@ -31,11 +36,10 @@ const FoodBookingPage = () => {
         icon: "success",
         button: "Ok",
       }).then(() => {
-        location.replace("/food");
+        // navidate to food bookings
+        navigate("/user/my-food-orders");
       });
-
     } catch (error) {
-
       console.error(error);
     }
   };
@@ -60,20 +64,41 @@ const FoodBookingPage = () => {
   }
   return (
     <div className="mt-4 flex justify-center">
-      <div className="w-11/12 xl:w-[390px] shadow-xl p-2 flex flex-col items-center pb-4">
-        <img
-          className="w-full xl:w-11/12 mx-auto rounded"
-          src={orderData?.imageUrl}
-          alt=""
+      {isPaymentModalOpen && (
+        <MakePaymentModal
+          totalAmount={orderData?.price}
+          orderItems={[
+            {
+              name: orderData?.name,
+              price: orderData?.price,
+            },
+          ]}
+          phone={user?.phoneNumber}
+          onSuccess={handleOrder}
+          onBack={() => setIsPaymentModalOpen(false)}
+          onError={() => {}}
         />
-        <p className="text-xl font-bold my-2">{orderData?.name}</p>
-        <p className="my-2 font-bold">
-          Price: <span className="text-success">Ksh. {orderData?.price}</span>/PCS
-        </p>
-        <button onClick={handleOrder} className="btn  btn-success text-white">
-          Confirm Order
-        </button>
-      </div>
+      )}
+      {!isPaymentModalOpen && (
+        <div className="w-11/12 xl:w-[390px] shadow-xl p-2 flex flex-col items-center pb-4">
+          <img
+            className="w-full xl:w-11/12 mx-auto rounded"
+            src={orderData?.imageUrl}
+            alt=""
+          />
+          <p className="text-xl font-bold my-2">{orderData?.name}</p>
+          <p className="my-2 font-bold">
+            Price: <span className="text-success">Ksh. {orderData?.price}</span>
+            /PCS
+          </p>
+          <button
+            onClick={openPaymentModal}
+            className="btn  btn-success text-white"
+          >
+            Confirm Order
+          </button>
+        </div>
+      )}
     </div>
   );
 };

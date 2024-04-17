@@ -22,7 +22,7 @@ const SingleFood = ({ food }) => {
       <div className="p-2">
         <p className="text-xl">{name}</p>
         <p className="text-lg">
-          Price: {price} <span className="font-bold">BDT</span>
+          Price: Ksh. {price} <span className="font-bold"></span>
         </p>
         <div className="flex justify-center">
           <button

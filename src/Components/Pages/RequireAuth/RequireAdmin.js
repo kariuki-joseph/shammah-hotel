@@ -6,10 +6,6 @@ import useAdmin from '../../Hooks/useAdmin';
 import { auth } from '../../Firebase/firebase.init';
 import Loading from '../Shared/Loading';
 
-
-
-
-
 const RequireAdmin = ({children}) => {
     const [user, loading] = useAuthState(auth);
     const [admin, adminLoading] = useAdmin(user);
