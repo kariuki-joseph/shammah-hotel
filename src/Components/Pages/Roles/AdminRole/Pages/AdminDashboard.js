@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "../../../../Firebase/firebase.init";
+import { auth } from "../../../../Firebase/firebase.init";
 import Loading from "../../../Shared/Loading";
 import userPhoto from "../../../../assets/avatar.png";
 import { AiOutlineDashboard } from "react-icons/ai";

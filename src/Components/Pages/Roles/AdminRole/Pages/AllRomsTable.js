@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import UpdateSingleRoom from "../Modals/updateSingleRoom";
 
 const AllRoomsTable = ({ room, index, setAllRooms }) => {
-  const { img, roomId, price, name } = room;
+  const { imageUrl, roomId, price, name, capacity } = room;
   const imageStorageKey = "52a7c30a95d000395b196c985adb3c83";
   
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,7 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
     }
 
     await fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms/${roomId}`,
+      `${process.env.REACT_APP_API_SERVER_URL}/rooms/${roomId}`,
       {
         method: "PUT",
         headers: {
@@ -52,7 +52,7 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
       )
       .then((res) => res.json())
       .then((data) => {
-        swal({
+        Swal.fire({
           title: "Room Updated Successful!",
           text: "Updated room successfully!",
           icon: "success",
@@ -62,7 +62,7 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
 
       //this api is called for refresh updated
     fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms`
+      `${process.env.REACT_APP_API_SERVER_URL}/rooms`
       )
       .then((res) => res.json())
       .then((data) => {
@@ -71,6 +71,7 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
       })
     };
 
+    
   // show update room modal
   const showUpdateModal = () => {
     setIsOpen(true);
@@ -83,7 +84,7 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
 
   const handleDeleteOrder = async (roomId) => {
     // alert(`Clicked on ${roomId}`)
-    swal({
+    Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
@@ -91,24 +92,24 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${process.env.REACT_APP_API_SERVER_URL}/products/rooms/${roomId}`;
+        const url = `${process.env.REACT_APP_API_SERVER_URL}/rooms/${roomId}`;
         await fetch(url, {
           method: "DELETE",
         })
           .then((res) => res.json())
           .then((data) => console.log(data));
-        swal("The Room is Deleted", {
+        Swal.fire("The Room is Deleted", {
           icon: "success",
         });
 
         //this second fetched is use to refresh delete data
         await fetch(
-          `${process.env.REACT_APP_API_SERVER_URL}/products/rooms`
+          `${process.env.REACT_APP_API_SERVER_URL}/rooms`
         )
           .then((res) => res.json())
           .then((data) => setAllRooms(data?.data));
       } else {
-        swal("Oder not deleted. You canceled it!");
+        Swal.fire("Oder not deleted. You canceled it!");
       }
     });
   };
@@ -117,10 +118,11 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
     <tr>
       <th>{index + 1}</th>
       <td>
-        <img className="w-28 h-20 rounded " src={img} alt="" />
+        <img className="w-28 h-20 rounded " src={imageUrl} alt="" />
       </td>
       <td>{name}</td>
-      <td>{price}TK</td>
+      <td>Ksh. {price}</td>
+      <td>{capacity} person(s)</td>
       <td>
         <button
           onClick={() => {
@@ -128,13 +130,13 @@ const AllRoomsTable = ({ room, index, setAllRooms }) => {
           }}
           className="btn btn-error btn-sm btn-outline hover:text-base-200"
         >
-          Delete Room
+          Delete
         </button>
         <button
           onClick={() => showUpdateModal()}
           className="btn btn-success btn-sm btn-outline ml-2"
         >
-          Update Room
+          Update
         </button>
       </td>
 

@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
+import axiosInstance from "../../../../../axios";
 
 const GetOrders = ({ order, index, orderData, user, setOrderData }) => {
-  const { img, roomId, orderId, name, startDate, endDate, price } = order;
+  const { imageUrl, roomId, orderId, name, checkIn, checkOut, price } = order;
 
   const handleDeleteOrder = async (orderId) => {
     // alert(`Clicked on ${roomId}`)
-    swal({
+    Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
@@ -15,26 +16,20 @@ const GetOrders = ({ order, index, orderData, user, setOrderData }) => {
     }).then(async (willDelete) => {
       if (willDelete) {
         // const url = `${process.env.REACT_APP_API_SERVER_URL}/orders/delete-room-order/${roomId}`;
-        await fetch(
-          `${process.env.REACT_APP_API_SERVER_URL}/orders/delete-room-order/${orderId}`,
-          {
-            method: "DELETE",
-          }
-        )
-          .then((res) => res.json())
-          .then((data) => console.log(data));
-        swal("Your order Deleted", {
-          icon: "success",
-        });
+        const response = await axiosInstance.delete(`/rooms/orders/${orderId}`);
+
+        if (response.data) {
+          Swal.fire("Your order Deleted", {
+            icon: "success",
+          });
+        }
 
         //this second fetched is use to refresh delete data
-        await fetch(
-          `${process.env.REACT_APP_API_SERVER_URL}/orders/room/${user?.email}`
-        )
-          .then((res) => res.json())
-          .then((data) => setOrderData(data?.data));
+        const response2 = await axiosInstance.get(`/rooms/orders/${user?.email}`);
+        setOrderData(response2.data?.data);
+        
       } else {
-        swal("Oder not deleted. You canceled it!");
+        Swal.fire("Oder not deleted. You canceled it!");
       }
     });
   };
@@ -43,14 +38,14 @@ const GetOrders = ({ order, index, orderData, user, setOrderData }) => {
     <tr>
       <th>{index + 1}</th>
       <td>
-        <img className="w-28 xl:h-20 rounded " src={img} alt="" />
+        <img className="w-28 xl:h-20 rounded " src={imageUrl} alt="" />
       </td>
       <td>{roomId}</td>
       <td>{orderId}</td>
       <td>{name}</td>
-      <td>{startDate}</td>
-      <td>{endDate}</td>
-      <td>{price}TK</td>
+      <td>{checkIn}</td>
+      <td>{checkOut}</td>
+      <td>Ksh. {price}</td>
       <td>
         <button
           onClick={() => {

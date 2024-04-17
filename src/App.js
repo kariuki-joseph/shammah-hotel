@@ -33,7 +33,6 @@ import FoodOrders from './Components/Pages/Roles/AdminRole/Pages/FoodOrders';
 import RequireAdmin from './Components/Pages/RequireAuth/RequireAdmin';
 import NavbarTwo from './Components/Pages/Header/NavbarTwo';
 
-
 function App() {
   const location = useLocation();
   const hideNavbar = location.pathname.startsWith('/admin') ||

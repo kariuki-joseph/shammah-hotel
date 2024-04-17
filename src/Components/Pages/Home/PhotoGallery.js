@@ -1,8 +1,16 @@
 import FsLightbox from "fslightbox-react";
 import React, { useState } from "react";
+import img1 from "../../assets/photo-gallery/img1.jpg";
+import img2 from "../../assets/photo-gallery/img2.jpg";
+import img3 from "../../assets/photo-gallery/img3.jpg";
+import img4 from "../../assets/photo-gallery/img4.jpg";
+import img5 from "../../assets/photo-gallery/img5.jpg";
+import img6 from "../../assets/photo-gallery/img6.jpg";
+import img7 from "../../assets/photo-gallery/img7.jpg";
+import img8 from "../../assets/photo-gallery/img8.jpg";
 
 const PhotoGallery = () => {
-  const [toggler, setToggler] = useState(false);
+  const [toggler, setToggler] = useState(null);
 
   return (
     <div className="mt-12 mb-12">
@@ -13,28 +21,28 @@ const PhotoGallery = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 place-content-center place-items-center xl:grid-cols-4 gap-2 cursor-pointer">
-            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded " src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/meeting-room/16256-113891-f63612804_3xl.jpg" alt="" />
-            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/restaurant/16256-113891-f63612968_3xl.jpg" alt="" />
-            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/ballroom/16256-113891-f63612838_3xl.jpg" alt="" />
-            <img onClick={() => setToggler(!toggler)}  className="w-[263px] h-[214px] rounded" src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/guest-room/16256-113891-f65416992_3xl.jpg" alt="" />
-            <img onClick={() => setToggler(!toggler)}  className="w-[263px] h-[214px] rounded" src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/suite/16256-113891-f65416994_3xl.jpg" alt="" />
-            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/guest-room/16256-113891-f65416992_3xl.jpg" alt="" />
-            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/meeting-room/16256-113891-f63612834_3xl.jpg" alt="" />
-            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src="https://media.radissonhotels.net/image/meetings-and-events--hotel-generic/meeting-room/16256-121453-f64344049_3xl.jpg" alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded " src={img1} alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src={img2} alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src={img3} alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src={img4} alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src={img5} alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src={img6} alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src={img7} alt="" />
+            <img onClick={() => setToggler(!toggler)} className="w-[263px] h-[214px] rounded" src={img8} alt="" />
         </div>
         <>
 			
 			 <FsLightbox
 				toggler={toggler}
 				sources={[
-					'https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/meeting-room/16256-113891-f63612804_3xl.jpg',
-					'https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/restaurant/16256-113891-f63612968_3xl.jpg',
-					'https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/ballroom/16256-113891-f63612838_3xl.jpg',
-          'https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/guest-room/16256-113891-f65416992_3xl.jpg',
-          'https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/suite/16256-113891-f65416994_3xl.jpg',
-          'https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/guest-room/16256-113891-f65416992_3xl.jpg',
-          'https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/meeting-room/16256-113891-f63612834_3xl.jpg',
-          'https://media.radissonhotels.net/image/meetings-and-events--hotel-generic/meeting-room/16256-121453-f64344049_3xl.jpg'
+          img1,
+          img2,
+          img3,
+          img4,
+          img5,
+          img6,
+          img7,
+          img8,
 				]}
 			/>
 		 </>

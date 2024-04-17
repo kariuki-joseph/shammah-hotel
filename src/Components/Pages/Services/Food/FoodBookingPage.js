@@ -4,8 +4,9 @@ import { useParams } from "react-router-dom";
 import Loading from "../../Shared/Loading";
 import { Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "../../../Firebase/firebase.init";
-import swal from "sweetalert";
+import { auth } from "../../../Firebase/firebase.init";
+import Swal from "sweetalert2";
+import axiosInstance from "../../../../axios";
 
 const FoodBookingPage = () => {
   const { foodId } = useParams();
@@ -14,42 +15,43 @@ const FoodBookingPage = () => {
 
   console.log("ox: ", orderData);
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     const orderFood = {
       foodId: orderData?.foodId,
       email: user?.email,
       name: orderData?.name,
       price: orderData?.price,
-      img: orderData?.img,
+      imageUrl: orderData?.imageUrl,
     };
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/order-food/create-order`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(orderFood),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        swal({
-          title: "Order Successful",
-          text: "Your order is successful. Check email for confirmation!",
-          icon: "success",
-          button: "Ok",
-        });
-        // event.target.reset();
+    try {
+      const response = await axiosInstance.post(`/foods/orders`, orderFood);
+      Swal.fire({
+        title: "Order Successful",
+        text: "Your order is successful. Check email for confirmation!",
+        icon: "success",
+        button: "Ok",
+      }).then(() => {
+        location.replace("/food");
       });
+
+    } catch (error) {
+
+      console.error(error);
+    }
   };
+
   useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/foods/${foodId}`
-    )
-      .then((res) => res.json())
-      .then((data) => setOrderData(data?.data));
+    const fetchFood = async () => {
+      try {
+        const response = await axiosInstance.get(`/foods/${foodId}`);
+        setOrderData(response.data?.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchFood();
   }, [foodId]);
+
   if (loading) {
     return <Loading></Loading>;
   }
@@ -61,13 +63,12 @@ const FoodBookingPage = () => {
       <div className="w-11/12 xl:w-[390px] shadow-xl p-2 flex flex-col items-center pb-4">
         <img
           className="w-full xl:w-11/12 mx-auto rounded"
-          src={orderData?.img}
+          src={orderData?.imageUrl}
           alt=""
         />
-        <p className="mt-2">Food ID: {orderData?.foodId}</p>
-        <p className="text-xl font-bold">{orderData?.name}</p>
+        <p className="text-xl font-bold my-2">{orderData?.name}</p>
         <p className="my-2 font-bold">
-          Price: <span className="text-red-500">{orderData?.price}TK</span>/PCS
+          Price: <span className="text-success">Ksh. {orderData?.price}</span>/PCS
         </p>
         <button onClick={handleOrder} className="btn  btn-success text-white">
           Confirm Order

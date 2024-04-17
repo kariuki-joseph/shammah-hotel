@@ -11,7 +11,7 @@ import { Menu, Transition, Popover } from "@headlessui/react";
 import { Link } from 'react-router-dom';
 import UserImage from '../../../../assets/avatar.png'
 import { useAuthState } from 'react-firebase-hooks/auth';
-import auth from '../../../../Firebase/firebase.init';
+import { auth } from '../../../../Firebase/firebase.init';
 import Loading from '../../../Shared/Loading';
 import { BiLogOutCircle } from "react-icons/bi";
 import { signOut } from 'firebase/auth';

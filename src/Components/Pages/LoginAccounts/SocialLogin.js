@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import auth from "../../Firebase/firebase.init";
+import { auth } from "../../Firebase/firebase.init";
 import Loading from "../Shared/Loading";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -29,16 +29,13 @@ const SocialLogin = () => {
       email: user.user.email,
     };
     navigate(from, { replace: true } || "/"); // jekhan theke login korse se khane niye jabe
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/users/store-user`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      }
-    )
+    fetch(`${process.env.REACT_APP_API_SERVER_URL}/users/store-user`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    })
       .then((res) => res.json())
       .then((data) => console.log(data));
     // navigate("/");

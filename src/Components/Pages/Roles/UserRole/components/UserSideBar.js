@@ -6,7 +6,7 @@ import avatar from '../../../../assets/avatar.png'
 import { FaHome } from "react-icons/fa";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import auth from '../../../../Firebase/firebase.init';
+import { auth } from '../../../../Firebase/firebase.init';
 import Loading from '../../../Shared/Loading';
 
 

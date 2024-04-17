@@ -2,7 +2,7 @@ import React from 'react'
 import { MdOutlinePhoneCallback } from "react-icons/md";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
-import auth from '../../Firebase/firebase.init';
+import { auth } from '../../Firebase/firebase.init';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { signOut } from 'firebase/auth';
 import useAdmin from '../../Hooks/useAdmin';

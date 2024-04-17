@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "../../../../Firebase/firebase.init";
+import { auth } from "../../../../Firebase/firebase.init";
 import Loading from "../../../Shared/Loading";
 import FoodOrdersTable from "./FoodOrdersTable";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoFastFoodSharp } from "react-icons/io5";
+import axiosInstance from "../../../../../axios";
 
 const MyFoodOrders = () => {
   const [user, loading] = useAuthState(auth);
@@ -13,11 +14,15 @@ const MyFoodOrders = () => {
   console.log(orderData);
 
   useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/order-food/${user?.email}`
-    )
-      .then((res) => res.json())
-      .then((data) => setOrderData(data?.data));
+      const fetchOrderData = async () => {
+        try {
+          const response = await axiosInstance.get(`/foods/orders/${user?.email}`);
+          setOrderData(response.data?.data);
+        } catch (error) {
+          console.error('Failed to fetch order data:', error);
+        }
+      };
+      fetchOrderData();
   }, [user?.email, setOrderData]);
   if (loading) {
     return <Loading></Loading>;
@@ -35,7 +40,6 @@ const MyFoodOrders = () => {
             <tr>
               <th></th>
               <th>Image</th>
-              <th>Food ID</th>
               <th>Order ID</th>
               <th>Food Name</th>
               <th>Price</th>

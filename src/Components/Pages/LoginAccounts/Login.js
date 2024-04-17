@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SocialLogin from "./SocialLogin";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import auth from "../../Firebase/firebase.init";
+import { auth } from "../../Firebase/firebase.init";
 import Loading from "../Shared/Loading";
 
 const Login = () => {
@@ -47,16 +47,20 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <div className="w-full h-screen pt-32 bg-[#F9FAFB]">
-        <div className="">
+    <div className="flex items-center justify-center h-screen">
+      <div className="w-full pt-32 bg-[#F9FAFB] mx-auto">
+        <div className="flex justify-center">
           <form
             onSubmit={handleEmailPasswordLogin}
-            className="flex flex-col w-11/12 xl:w-[460px] mx-auto shadow-xl p-8"
+            className="flex flex-col w-11/12 xl:w-[460px] shadow-xl p-8"
           >
             <img
-              className="w-24 mx-auto"
-              src="http://www.hotels.gov.bd/forntend/img/core-img/logo.png"
+              className="mx-auto"
+              style={{
+                width: "150px",
+                height: "auto",
+              }}
+              src="/images/logo.png"
               alt=""
             />
             <p className="text-2xl font-bold text-center mb-2">
@@ -80,7 +84,7 @@ const Login = () => {
                 placeholder="Enter password"
               />
               <Link to="/reset-password">
-                <p className="text-right text-blue-800 underline">
+                <p className="text-right text-blue-800 underline my-2">
                   Forgot Password?
                 </p>
               </Link>
@@ -92,8 +96,8 @@ const Login = () => {
               value="Login"
             />
             <div>
-              <p className="text-gray-500 mt-2">
-                New to Redison?
+              <p className="text-gray-500 my-3">
+                New to Shammah Hotel? &nbsp;  
                 <Link className="text-blue-800 " to="/register">
                   Create Account
                 </Link>

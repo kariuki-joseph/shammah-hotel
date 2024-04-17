@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import FoodOrdersTable from "./FoodOrdersTable";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { MdFastfood } from "react-icons/md";
+import axiosInstance from "../../../../../axios";
 
 const FoodOrders = () => {
   const [allOrderData, setAllOrderData] = useState([]);
   // console.log(orderData)
 
   useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/order-food/all-foods-orders`
-    )
-      .then((res) => res.json())
-      .then((data) => setAllOrderData(data?.data));
+    const fetchData = async () => {
+      const response = await axiosInstance.get("/foods/orders");
+      setAllOrderData(response.data?.data);
+    };
+
+    fetchData();
   }, []);
   return (
     <div className="bg-[#F1F5F9] bg-gradient-to-r from-stone-100 to-blue-50 calc-height">

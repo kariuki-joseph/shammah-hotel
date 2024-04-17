@@ -3,59 +3,48 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 import { MyContext } from "../../Context/Context";
+import axiosInstance from "../../../axios";
 
 const Banner = () => {
   // const [availableRooms, setAvailableRooms]
   const { setAvailableRooms, setSearchRoomData } = useContext(MyContext);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [inputValue, setInputValue] = useState("");
+  const [persons, setPersons] = useState(1);
 
   // const [availableRooms, setAvailableRooms] = useState([]);
   const navigate = useNavigate();
 
   // console.log("x is: ",x)
 
-  const dateObjectStartDate = new Date(startDate);
-  const dateObjectEndDate = new Date(endDate);
-  const formattedStartDate = dateObjectStartDate.toISOString().split("T")[0];
-  const formattedEndDate = dateObjectEndDate.toISOString().split("T")[0];
-  // console.log(formattedStartDate);
-  // console.log(formattedEndDate)
+  const formattedStartDate = new Date(startDate).toISOString().split("T")[0];
+  const formattedEndDate = new Date(endDate).toISOString().split("T")[0];
 
-  const handleInputChange = (event) => {
+  const updatePersonsInputChange = (event) => {
     // Update the state with the new input value
-    setInputValue(event.target.value);
+    setPersons(event.target.value);
   };
   const handleCheckAvailableRoom = async () => {
-    const date = {
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-    };
-
     //searched data store
     const searchData = {
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-      person: inputValue,
+      checkIn: startDate,
+      checkOut: endDate,
+      persons: persons,
     };
 
     setSearchRoomData(searchData);
 
-    console.log(date);
 
-    await fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/products/search-available-rooms?${new URLSearchParams(
-        date
-      ).toString()}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setAvailableRooms(data);
-        }
-        console.log("data: ", data);
-      });
+    try {
+      const response = await axiosInstance.get(`/rooms/available?${new URLSearchParams(searchData).toString()}`);
+      const data = response.data;
+      if (data) {
+      setAvailableRooms(data);
+      }
+      console.log("data: ", data);
+    } catch (error) {
+      console.error("Error fetching available rooms: ", error);
+    }
 
     navigate("/available-rooms");
   };
@@ -103,13 +92,14 @@ const Banner = () => {
                 name=""
                 id=""
                 className="h-10 w-[200px] xl:w-[180px] bg-white text-center rounded outline-none"
-                value={inputValue}
-                onChange={handleInputChange}
+                value={persons}
+                onChange={updatePersonsInputChange}
               >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
+                {[...Array(8).keys()].map((i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
               </select>
             </div>
             <div>

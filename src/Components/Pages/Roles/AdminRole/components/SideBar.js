@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, CreditCardIcon, UserIcon } from '@heroicons/react/24/solid';
 import avatar from '../../../../assets/avatar.png'
-import auth from '../../../../Firebase/firebase.init';
+import { auth } from '../../../../Firebase/firebase.init';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from '../../../Shared/Loading';
 import { TbHomeBolt } from "react-icons/tb";

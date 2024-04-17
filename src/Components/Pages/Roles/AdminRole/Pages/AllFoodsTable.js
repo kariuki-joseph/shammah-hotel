@@ -1,42 +1,41 @@
 /* eslint-disable no-restricted-globals */
 import { useEffect, useState } from "react";
 import { ImPriceTags } from "react-icons/im";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import UpdateSingleFood from "../Modals/updateSingleFood";
+import { uploadImage } from "../../../../Firebase/firebaseService";
+import axiosInstance from "../../../../../axios";
+import Toast from "../../../../../toast";
 
 const AllFoodsTable = ({ food, index, setAllFoods, key }) => {
-  const {foodId, name, price, img} = food;
-  let imgUrl;
+  const { foodId, name, price, quantity, imageUrl } = food;
   const [isOpen, setIsOpen] = useState(false);
-  //   const handleGetUpdate = async()=> {
-  //    ;
-
-  //   }
-  // const handleButtonClick = () => {
-  //   // Perform any additional actions before or instead of form submission
-  //   console.log('Button clicked');
-  // };
+  // fetch foods from the database
+  const fetchFoods = async () => {
+    try {
+      const response = await axiosInstance.get(`/foods`);
+      setAllFoods(response.data?.data);
+    } catch (error) {
+      Toast.fire({
+        icon: "error",
+        title: "Could not get all foods. Please try again later",
+      });
+    }
+  };
 
   const onUpdate = async (food) => {
-    const imageStorageKey = "52a7c30a95d000395b196c985adb3c83";
-    const {foodId, name, price, imageFormData } = food;
-
-    console.log("imageFormData", imageFormData)
-    
-    if(imageFormData.size > 0){
-      const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
-      const res = await fetch(url, {
-        method: "POST",
-        body: imageFormData,
-      });
-      const data = await res.json();
-      if(data.success){
-        imgUrl = data.data.url
-      }
+    const { foodId, name, price, quantity, imageFile } = food;
+    let imageUrl;
+    // upload image if it has data
+    if (imageFile && imageFile.size > 0) {
+      imageUrl = await uploadImage(imageFile);
     }
 
     if (!foodId || !name || !price) {
-      alert("You must enter food id, name and price uploading image is optional");
+      Toast.fire({
+        icon: "error",
+        title: "Please fill all the fields",
+      });
       return;
     }
 
@@ -44,41 +43,35 @@ const AllFoodsTable = ({ food, index, setAllFoods, key }) => {
       foodId: foodId,
       name: name,
       price: price,
+      quantity: quantity,
+    };
+
+    if (imageUrl != undefined) {
+      data.imageUrl = imageUrl;
     }
 
-    if(imgUrl != undefined){
-      data.img = imgUrl;
-    }
-
-    await fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/foods/${foodId}`,
-      {
-        method: "PUT",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        swal({
+    try {
+      const response = await axiosInstance.put(`/foods/${foodId}`, data);
+      
+      if (response.data) {
+        Swal.fire({
           title: "Food Updated Successful!",
           text: "Updated Food successfully!",
           icon: "success",
           button: "Ok",
         });
+      }
+    } catch (error) {
+      Toast.fire({
+        icon: "error",
+        title: "Failed to update Food",
       });
 
-      //this api is called for refresh updated
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/foods/all-foods`
-      )
-      .then((res) => res.json())
-      .then((data) => {
-        setAllFoods(data?.data); 
-        closeUpdateModal()
-      });
+      console.error(error);
+    }
+
+    //this api is called for refresh updated
+    await fetchFoods();
   };
 
   const showUpdateModal = () => {
@@ -90,7 +83,7 @@ const AllFoodsTable = ({ food, index, setAllFoods, key }) => {
 
   const handleDeleteOrder = async (foodId) => {
     // alert(`Clicked on ${roomId}`)
-    swal({
+    Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this!",
       icon: "warning",
@@ -98,24 +91,19 @@ const AllFoodsTable = ({ food, index, setAllFoods, key }) => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${process.env.REACT_APP_API_SERVER_URL}/foods/${foodId}`;
-        await fetch(url, {
-          method: "DELETE",
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data));
-        swal("The Food is Deleted", {
-          icon: "success",
-        });
+        try {
+          await axiosInstance.delete(`/foods/${foodId}`);
+          Swal.fire("The Food is Deleted", {
+            icon: "success",
+          });
 
-        //this second fetched is use to refresh delete data
-        await fetch(
-          `${process.env.REACT_APP_API_SERVER_URL}/foods/all-foods`
-        )
-          .then((res) => res.json())
-          .then((data) => setAllFoods(data?.data));
+          //this second fetched is use to refresh delete data
+          await fetchFoods();
+        } catch (error) {
+          console.error(error);
+        }
       } else {
-        swal("Oder not deleted. You canceled it!");
+        Swal.fire("Oder not deleted. You canceled it!");
       }
     });
   };
@@ -124,10 +112,11 @@ const AllFoodsTable = ({ food, index, setAllFoods, key }) => {
     <tr>
       <th>{index + 1}</th>
       <td>
-        <img className="w-10 xl:w-32 xl:h-20 rounded " src={img} alt="" />
+        <img className="w-10 xl:w-32 xl:h-20 rounded " src={imageUrl} alt="" />
       </td>
       <td>{name}</td>
       <td>Ksh. {price}</td>
+      <td>{quantity}</td>
       <td className="">
         <button
           onClick={() => {
@@ -135,18 +124,22 @@ const AllFoodsTable = ({ food, index, setAllFoods, key }) => {
           }}
           className="btn btn-error btn-sm btn-outline hover:text-base-200"
         >
-          Delete Food
+          Delete
         </button>
         <button
           onClick={() => showUpdateModal()}
           className="btn btn-success btn-sm btn-outline ml-2"
         >
-          Update Food
+          Update
         </button>
       </td>
-      
-      <UpdateSingleFood onUpdate={onUpdate} food={food} isOpen={isOpen} onClose={closeUpdateModal}/>
-      
+
+      <UpdateSingleFood
+        onUpdate={onUpdate}
+        food={food}
+        isOpen={isOpen}
+        onClose={closeUpdateModal}
+      />
     </tr>
   );
 };

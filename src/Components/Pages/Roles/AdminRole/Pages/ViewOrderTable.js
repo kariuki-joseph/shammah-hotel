@@ -1,12 +1,12 @@
 import React from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const ViewOrderTable = ({ order, index, setAllOrderData }) => {
-  const { img, roomId, orderId, email, startDate, endDate, price } = order;
+  const { imageUrl, roomId, orderId, email, checkIn, checkOut, price } = order;
 
   const handleDeleteOrder = async (orderId) => {
     // alert(`Clicked on ${roomId}`)
-    swal({
+    Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
@@ -14,24 +14,24 @@ const ViewOrderTable = ({ order, index, setAllOrderData }) => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${process.env.REACT_APP_API_SERVER_URL}/orders/delete-room-order/${orderId}`;
+        const url = `${process.env.REACT_APP_API_SERVER_URL}/rooms/orders/${orderId}`;
         await fetch(url, {
           method: "DELETE",
         })
           .then((res) => res.json())
           .then((data) => console.log(data));
-        swal("The order is Deleted", {
+        Swal.fire("The order is Deleted", {
           icon: "success",
         });
 
         //this second fetched is use to refresh delete data
         await fetch(
-          `${process.env.REACT_APP_API_SERVER_URL}/orders/room-orders`
+          `${process.env.REACT_APP_API_SERVER_URL}/rooms/orders`
         )
           .then((res) => res.json())
           .then((data) => setAllOrderData(data?.data));
       } else {
-        swal("Oder not deleted. You canceled it!");
+        Swal.fire("Oder not deleted. You canceled it!");
       }
     });
   };
@@ -39,14 +39,14 @@ const ViewOrderTable = ({ order, index, setAllOrderData }) => {
     <tr>
       <th>{index + 1}</th>
       <td>
-        <img className="w-28 h-20 rounded " src={img} alt="" />
+        <img className="w-28 h-20 rounded " src={imageUrl} alt="" />
       </td>
       <td>{roomId}</td>
       <td>{orderId}</td>
       <td>{email}</td>
-      <td>{startDate}</td>
-      <td>{endDate}</td>
-      <td>{price}TK</td>
+      <td>{checkIn}</td>
+      <td>{checkOut}</td>
+      <td>Ksh. {price}</td>
       <td>
         <button
           onClick={() => {

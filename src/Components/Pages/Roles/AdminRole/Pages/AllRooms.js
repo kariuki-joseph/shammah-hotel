@@ -9,7 +9,7 @@ const AllRooms = () => {
 
   useEffect(() => {
     fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms`
+      `${process.env.REACT_APP_API_SERVER_URL}/rooms`
     )
       .then((res) => res.json())
       .then((data) => setAllRooms(data?.data));
@@ -30,6 +30,7 @@ const AllRooms = () => {
               <th>Image</th>
               <th>Room Name</th>
               <th>Price</th>
+              <th>Capacity</th>
               <th>Action</th>
             </tr>
           </thead>

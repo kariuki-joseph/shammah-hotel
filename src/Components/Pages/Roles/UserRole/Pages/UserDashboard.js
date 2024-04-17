@@ -3,7 +3,7 @@ import Loading from "../../../Shared/Loading";
 import userPhoto from "../../../../assets/avatar.png";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {AiOutlineDashboard} from 'react-icons/ai'
-import auth from "../../../../Firebase/firebase.init";
+import { auth } from "../../../../Firebase/firebase.init";
 const UserDashboard = () => {
   const [user, loading] = useAuthState(auth);
   if (loading) {

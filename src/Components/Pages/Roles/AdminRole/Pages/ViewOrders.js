@@ -9,7 +9,7 @@ const ViewOrders = () => {
 
   useEffect(() => {
     fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/orders/room-orders`
+      `${process.env.REACT_APP_API_SERVER_URL}/rooms/orders`
     )
       .then((res) => res.json())
       .then((data) => setAllOrderData(data?.data));
@@ -30,8 +30,8 @@ const ViewOrders = () => {
               <th>Room ID</th>
               <th>Order ID</th>
               <th>Email</th>
-              <th>StartDate</th>
-              <th>EndDate</th>
+              <th>CheckIn</th>
+              <th>Checkout</th>
               <th>Price</th>
               <th>Action</th>
             </tr>

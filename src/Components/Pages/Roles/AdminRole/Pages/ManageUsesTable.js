@@ -1,12 +1,12 @@
 import React from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const ManageUsersTable = ({ user, index, setUsers }) => {
   const { _id, name, email, role } = user;
 
   const handleDeleteOrder = async (roomId) => {
     // alert(`Clicked on ${roomId}`)
-    swal({
+    Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
@@ -20,7 +20,7 @@ const ManageUsersTable = ({ user, index, setUsers }) => {
         })
           .then((res) => res.json())
           .then((data) => console.log(data));
-        swal("The order is Deleted", {
+        Swal.fire("The order is Deleted", {
           icon: "success",
         });
 
@@ -31,7 +31,7 @@ const ManageUsersTable = ({ user, index, setUsers }) => {
           .then((res) => res.json())
           .then((data) => setUsers(data?.data));
       } else {
-        swal("Oder not deleted. You canceled it!");
+        Swal.fire("Oder not deleted. You canceled it!");
       }
     });
   };

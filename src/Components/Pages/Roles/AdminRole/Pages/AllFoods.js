@@ -2,17 +2,22 @@ import React, { useEffect, useState } from "react";
 import AllFoodsTable from "./AllFoodsTable";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoFastFoodSharp } from "react-icons/io5";
+import axiosInstance from "../../../../../axios";
 
 const AllFoods = () => {
   const [allFoods, setAllFoods] = useState([]);
   // console.log(orderData)
 
   useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/foods/all-foods`
-    )
-      .then((res) => res.json())
-      .then((data) => setAllFoods(data?.data));
+    const fetchData = async () => {
+      try {
+      const response = await axiosInstance.get('/foods');
+      setAllFoods(response.data?.data);
+      } catch (error) {
+      console.error('Failed to fetch foods:', error);
+      }
+    };
+    fetchData();
   }, []);
   return (
     <div className="bg-[#F1F5F9] bg-gradient-to-r from-stone-100 to-blue-50 calc-height">
@@ -27,9 +32,10 @@ const AllFoods = () => {
           <thead className="bg-base-300">
             <tr className="">
               <th></th>
-              <th>Image</th>
-              <th>Food Name</th>
+              <th>Cover Image</th>
+              <th>Name</th>
               <th>Price</th>
+              <th>Remaining Quantity</th>
               <th>Action</th>
             </tr>
           </thead>

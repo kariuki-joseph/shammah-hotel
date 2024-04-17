@@ -1,20 +1,22 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const ShowSingleRoom = ({room}) => {
-    const {roomId, img, name, price} = room;
+    const {roomId, imageUrl, name, price} = room;
     const navigate = useNavigate();
 
     const roomDetails = (roomId)=> {
         navigate(`/room/${roomId}`)
     }
+   
   return (
     <div className="w-[350px] h-[360px] shadow-xl bg-white relative">
-    <img className='w-[350px] h-[210px]' src={img} alt="" />
+    <img className='w-[350px] h-[210px]' src={imageUrl} alt="" />
     <div className="p-2">
       <p className="text-xl">{name}</p>
       <p className="text-lg">
-        Price: {price} <span className="font-bold">BDT/DAY</span>
+      <span className="font-bold">Ksh. {price} </span>/day
       </p>
       <div className="flex justify-center">
         <button

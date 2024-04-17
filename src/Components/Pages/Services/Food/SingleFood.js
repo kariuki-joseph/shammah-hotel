@@ -2,12 +2,12 @@
 /* eslint-disable no-restricted-globals */
 import React, { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import swal from "sweetalert";
-import auth from "../../../Firebase/firebase.init";
+import Swal from "sweetalert2";
+import { auth } from "../../../Firebase/firebase.init";
 import Loading from "../../Shared/Loading";
 
 const SingleFood = ({ food }) => {
-  const { foodId, img, name, price } = food;
+  const { foodId, imageUrl, name, price } = food;
   
   const navigate = useNavigate();
  
@@ -18,7 +18,7 @@ const SingleFood = ({ food }) => {
   }
   return (
     <div className="w-[350px] h-[360px] shadow-xl bg-white relative">
-      <img className="w-full xl:w-[356px] h-[206px]" src={img} alt="" />
+      <img className="w-full xl:w-[356px] h-[206px]" src={imageUrl} alt="" />
       <div className="p-2">
         <p className="text-xl">{name}</p>
         <p className="text-lg">

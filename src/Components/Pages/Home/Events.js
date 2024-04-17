@@ -1,4 +1,5 @@
 import React from "react";
+import meetingsAndEvents from "../../assets/meetings-and-events.jpg";
 
 const Events = () => {
   return (
@@ -12,7 +13,7 @@ const Events = () => {
         <div className="flex flex-col xl:flex-row gap-6">
           <img
             className="xl: w-[550px] h-[330px] rounded"
-            src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/meeting-room/16256-113891-f63612804_3xl.jpg"
+            src={meetingsAndEvents}
             alt=""
           />
           <p className="text-[#53565A] text-justify">

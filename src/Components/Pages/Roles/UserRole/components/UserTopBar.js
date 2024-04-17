@@ -11,7 +11,7 @@ import { Menu, Transition, Popover } from "@headlessui/react";
 import { Link } from 'react-router-dom';
 import UserImage from '../../../../assets/avatar.png'
 import { useAuthState } from 'react-firebase-hooks/auth';
-import auth from '../../../../Firebase/firebase.init';
+import { auth } from '../../../../Firebase/firebase.init';
 import { signOut } from 'firebase/auth';
 import Loading from '../../../Shared/Loading';
 import { FaHome } from "react-icons/fa";

@@ -4,11 +4,11 @@ import {
   useSendEmailVerification,
   useUpdateProfile,
 } from "react-firebase-hooks/auth";
-import auth from "../../Firebase/firebase.init";
+import { auth } from "../../Firebase/firebase.init";
 import Loading from "../Shared/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import SocialLogin from "./SocialLogin";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const Register = () => {
   let userData = {};
@@ -61,7 +61,7 @@ const Register = () => {
     navigate("/");
     sendEmailVerification();
     // alert("Verification email sent")
-    swal(
+    Swal.fire(
       "Registration Successful Check Email for Verify",
       "Your account successfully created, Verify your email",
       "success"

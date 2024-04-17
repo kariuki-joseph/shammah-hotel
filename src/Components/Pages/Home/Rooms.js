@@ -7,7 +7,7 @@ const Rooms = () => {
 
   useEffect(() => {
     fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms`
+      `${process.env.REACT_APP_API_SERVER_URL}/rooms`
     )
       .then((res) => res.json())
       .then((data) => setRooms(data?.data.slice(0, 6)));

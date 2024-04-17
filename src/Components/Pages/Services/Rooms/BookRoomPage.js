@@ -1,9 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  uselocatoin,
+  useParams,
+  useLoaderData,
+  useLocation,
+} from "react-router-dom";
 import { MyContext } from "../../../Context/Context";
 import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "../../../Firebase/firebase.init";
-import swal from "sweetalert";
+import { auth } from "../../../Firebase/firebase.init";
+import Swal from "sweetalert2";
+import axiosInstance from "../../../../axios";
 
 const BookRoomPage = () => {
   const [user] = useAuthState(auth);
@@ -11,201 +18,242 @@ const BookRoomPage = () => {
   const { searchRoomData } = useContext(MyContext);
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const bookingInfo = location.state;
   // const [loading, setLoading] = useState(false);
-  console.log("roomData: ", roomData);
+  console.log("bookinginfo: ", bookingInfo);
 
-  const startDate = new Date(searchRoomData?.startDate);
-  const endDate = new Date(searchRoomData?.endDate);
+  const checkInFormatted = bookingInfo.checkIn.toISOString().split("T")[0];
+  const checkOutFormatted = bookingInfo.checkOut.toISOString().split("T")[0];
 
-  // Calculate the difference in milliseconds
-  const timeDifference = endDate - startDate;
+  const getDaysDiff = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
 
-  // Calculate the number of days
-  let daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    // Calculate the difference in milliseconds
+    const timeDifference = endDate - startDate;
 
-  if (daysDifference === 0) {
-    daysDifference = 1;
-  }
+    // Calculate the number of days
+    let daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+    return daysDifference + 1;
+  };
 
   const handleBookRoom = async () => {
+    const numDays = getDaysDiff(bookingInfo.checkIn, bookingInfo.checkOut);
     const order = {
-      roomId: roomData?.roomId,
+      roomId: roomId,
       email: user?.email,
       name: roomData?.name,
-      startDate: searchRoomData?.startDate,
-      endDate: searchRoomData?.endDate,
-      price: daysDifference * roomData?.price,
-      img: roomData?.img,
+      checkIn: checkInFormatted,
+      checkOut: checkOutFormatted,
+      price: numDays * roomData?.price,
+      imageUrl: roomData?.imageUrl,
     };
 
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/orders/order-room`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(order),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        swal({
+    try {
+      const response = await axiosInstance.post(`/rooms/orders`, order);
+      const data = response.data;
+      if (data.success) {
+        Swal.fire({
           title: "Room Booking Successful",
           text: "Check your email for confirmation!",
           icon: "success",
           button: "Ok",
         });
-        // event.target.reset();
-        navigate("/user/my-orders");
+      } else {
+        Swal.fire({
+          title: "Room Booking Failed",
+          text: "Please try again!",
+          icon: "error",
+          button: "Ok",
+        });
+      }
+
+      navigate("/user/my-orders");
+    } catch (error) {
+      Swal.fire({
+        title: "Room Booking Failed",
+        text: "Error: " + error,
+        icon: "error",
+        button: "Ok",
       });
+
+      console.error("Error:", error);
+    }
   };
-  console.log("day: ", startDate);
-  console.log("end:", endDate);
 
   useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/products/rooms/${roomId}`
-    )
-      .then((res) => res.json())
-      .then((data) => setRoomData(data.data[0]));
+    const fetchRoomData = async () => {
+      try {
+        const response = await axiosInstance.get(`/rooms/${roomId}`);
+        setRoomData(response.data?.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+    fetchRoomData();
   }, [roomId]);
   return (
-    <div className="w-11/12 xl:w-[1100px] mx-auto mt-4 flex flex-col xl:flex-row">
-      <div>
+    <div className="w-full xl:w-[1100px] mx-auto mt-6 flex flex-col xl:flex-row">
+      <div className="mx-auto">
         <div className="mb-6">
           <img
-            className="w-11/12 mx-auto h-[200px] xl:w-[710px] xl:h-[430px] rounded"
-            src={roomData?.img}
+            className="w-[300px] h-[200px] xl:w-[710px] xl:h-[430px] rounded-md"
+            src={roomData?.imageUrl}
             alt=""
           />
         </div>
 
-        <div className="flex ml-2">
+        <div className="w-full xl:w-[730px] mb-4">
+          <div>
+            <p className="text-2xl font-semibold text-gray-900 mb-4 mt-4">
+              About Room
+            </p>
+          </div>
+          <p className="text-lg text-gray-600">{roomData?.description}</p>
+        </div>
+
+        <div className="flex gap-4 xl:gap-0 xl:ml-2 flex-col justify-center items-center xl:justify-normal xl:flex-row">
           <div className="w-[235px] h-[140px] bg-[#414159] flex items-center justify-center mr-[1px]">
             <div className="text-center">
-              <p className="text-md xl:text-xl font-bold text-white">Size:</p>
-              <p className="text-md xl:text-xl text-[#EDDFBA]">400 Sq-ft</p>
+              <p className="text-xl font-bold text-white">Size:</p>
+              <p className="text-xl text-[#EDDFBA]">
+                {roomData?.roomSize} Sq-ft
+              </p>
             </div>
           </div>
           <div className="w-[235px] h-[140px] bg-[#414159] flex items-center justify-center mr-[1px]">
             <div className="text-center">
-              <p className="text-md xl:text-xl font-bold text-white">
-                Capacity:
-              </p>
-              <p className="text-md xl:text-xl text-[#EDDFBA]">
-                02 Adult & 02 Childs (below 10 Years)
+              <p className="text-xl font-bold text-white">Capacity:</p>
+              <p className="text-xl text-[#EDDFBA]">
+                {roomData?.capacity} Persons
               </p>
             </div>
           </div>
           <div className="w-[235px] h-[140px] bg-[#414159] flex items-center justify-center">
             <div className="text-center">
-              <p className="text-md xl:text-xl font-bold text-white">Bed:</p>
-              <p className="text-md xl:text-xl text-[#EDDFBA]">Double</p>
+              <p className="text-xl font-bold text-white">Bed:</p>
+              <p className="text-xl text-[#EDDFBA]">Double</p>
             </div>
           </div>
         </div>
 
-        <div className="w-11/12 xl:w-[730px] mb-6 xl:mb-0">
+        <div className="w-full xl:w-[730px] mb-4">
           <div>
             <p className="text-2xl font-semibold text-gray-900 mb-4 mt-4">
               Room Services
             </p>
           </div>
-          <div className="grid grid-cols-2 xl:grid-cols-3 gap-6">
-            <div className="flex items-center gap-3">
-              <div>
-                <img
-                  src="http://www.hotels.gov.bd/forntend/img/core-img/icon1.png"
-                  alt=""
-                />
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            {roomData?.amenities?.includes("airCondition") && (
+              <div className="flex items-center gap-3">
+                <div>
+                  <img
+                    src="http://www.hotels.gov.bd/forntend/img/core-img/icon1.png"
+                    alt=""
+                  />
+                </div>
+                <p> Air Conditioning </p>
               </div>
-              <p>Air Conditioning</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div>
-                <img
-                  src="http://www.hotels.gov.bd/forntend/img/core-img/icon3.png"
-                  alt=""
-                />
+            )}
+            {roomData?.amenities?.includes("hotShower") && (
+              <div className="flex items-center gap-3">
+                <div>
+                  <img
+                    height={"35px"}
+                    width={"35px"}
+                    src="https://cdn-icons-png.flaticon.com/512/900/900685.png"
+                    alt=""
+                  />
+                </div>
+                <p> Hot Shower </p>
               </div>
-              <p> Restaurant quality </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div>
-                <img
-                  src="http://www.hotels.gov.bd/forntend/img/core-img/icon4.png"
-                  alt=""
-                />
+            )}
+
+            {roomData?.amenities?.includes("dstv") && (
+              <div className="flex items-center gap-3">
+                <div>
+                  <img
+                    src="http://www.hotels.gov.bd/forntend/img/core-img/icon4.png"
+                    alt=""
+                  />
+                </div>
+                <p>DSTV</p>
               </div>
-              <p>Cable TV</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div>
-                <img
-                  src="http://www.hotels.gov.bd/forntend/img/core-img/icon5.png"
-                  alt=""
-                />
+            )}
+            {roomData?.amenities?.includes("wifi") && (
+              <div className="flex items-center gap-3">
+                <div>
+                  <img
+                    src="http://www.hotels.gov.bd/forntend/img/core-img/icon5.png"
+                    alt=""
+                  />
+                </div>
+                <p>Unlimited Wifi</p>
               </div>
-              <p>Unlimited Wifi</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div>
-                <img
-                  src="http://www.hotels.gov.bd/forntend/img/core-img/icon6.png"
-                  alt=""
-                />
+            )}
+            {roomData?.amenities?.includes("service24") && (
+              <div className="flex items-center gap-3">
+                <div>
+                  <img
+                    src="http://www.hotels.gov.bd/forntend/img/core-img/icon6.png"
+                    alt=""
+                  />
+                </div>
+                <p>Service 24/7</p>
               </div>
-              <p>Service 24/7</p>
-            </div>
+            )}
           </div>
         </div>
       </div>
       {/* another div */}
-      <div className="w-11/12 mx-auto xl:w-[350px] h-[400px] bg-[#E3E3ED] p-4 rounded-md">
+
+      <div className="w-11/12 mx-auto xl:w-[350px] h-1/2 bg-[#E3E3ED] p-4 rounded-md">
         <div className="mt-4">
           <p className="text-2xl font-bold text-center mb-2 text-blue-500">
             Order Summary
           </p>
+          <p className="text-xl mb-2">
+            Room: <span className="text-black italic">{roomData?.name}</span>
+          </p>
           <p className="text-xl mb-2 text">
             RoomID:{" "}
-            <span className="text-black italic border-2 border-cyan-50 ">
-              {roomData?.roomId}
-            </span>
-          </p>
-          <p className="text-xl mb-2">
-            <span className="text-black italic border-2 border-cyan-50 ">
-              {roomData?.name}
-            </span>
-          </p>
-          <p className="text-xl mb-2">
-            Price:{" "}
-            <span className="text-black italic border-2 border-cyan-50 ">
-              {roomData?.price} BDT/day
-            </span>
+            <span className="text-black italic ">{roomData?.roomId}</span>
           </p>
           <p className="text-xl mb-2">
             Check In Date:{" "}
-            <span className="text-black italic border-2 border-cyan-50 ">
-              {searchRoomData?.startDate}
-            </span>
+            <span className="text-black italic ">{checkInFormatted}</span>
           </p>
           <p className="text-xl mb-2">
             Check Out Date:{" "}
-            <span className="text-black italic border-2 border-cyan-50">
-              {searchRoomData?.endDate}
-            </span>
+            <span className="text-black italic">{checkOutFormatted}</span>
           </p>
           <p className="text-xl mb-2">
-            Total Person:{" "}
-            <span className="text-black italic border-2 border-cyan-50">
-              {searchRoomData?.person || 1}
+            Number of Days:{" "}
+            <span className="text-black italic">
+              {getDaysDiff(bookingInfo.checkIn, bookingInfo.checkOut)} day(s)
             </span>
           </p>
+
           <p className="text-xl mb-2">
-            Total Price:{" "}
-            <span className="text-black italic border-2 border-cyan-50 ">
-              {daysDifference * roomData?.price} BDT
+            Price Per Day:{" "}
+            <span className="text-black italic">{roomData?.price}/day</span>
+          </p>
+          <p className="text-xl mb-2">
+            Total Persons:{" "}
+            <span className="text-black italic">
+              {bookingInfo.persons || 1}
+            </span>
+          </p>
+          <div className="divider"></div>
+          <p className="text-xl mb-2">
+            SubTotal:{" "}
+            <span className="text-black italic ">
+              Ksh.{" "}
+              {roomData?.price *
+                getDaysDiff(bookingInfo.checkIn, bookingInfo.checkOut)}
             </span>
           </p>
         </div>

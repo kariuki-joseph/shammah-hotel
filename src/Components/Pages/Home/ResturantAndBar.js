@@ -1,5 +1,7 @@
 import React from "react";
 
+import RestaurantImage from "../../assets/bars_and_restaurants.jpeg";
+
 const ResturantAndBar = () => {
   return (
     <div className="w-11/12 xl:w-[1100px] mx-auto mt-12 border-t">
@@ -12,20 +14,21 @@ const ResturantAndBar = () => {
         <div className="flex flex-col xl:flex-row gap-6">
           <img
             className="xl: w-[550px] h-[330px] rounded"
-            src="https://media.radissonhotels.net/image/radisson-blu-hotel-dhaka-water-garden/restaurant/16256-113891-f63612968_3xl.jpg"
+            src={RestaurantImage}
             alt=""
           />
           <p className="text-[#53565A] text-justify">
-            Take advantage of our four restaurants and two bars when you stay at
-            the Radisson Blu. Eat a hearty breakfast at the Water Garden
-            Brasserie or come to lunch and dinner for an international buffet
-            and live cooking stations. Sublime offers a sophisticated atmosphere
-            and local Bangladeshi produce used in fine cuisine. If you want a
-            more casual setting, enjoy Asian-inspired cuisine in Spice & Rice.
-            Looking for a light meal? Chit Chat offers sandwiches, salads, and
-            quiches. In the evenings, you can enjoy drinks and live
-            entertainment with friends at the Blaze Entertainment Lounge & Bar
-            or The Cigar Bar.
+            Experience the luxury of Shammah Hotel in Nyeri, Kenya, where you
+            can indulge in culinary delights across four restaurants and two
+            bars. Begin your day with a satisfying breakfast at the Water Garden
+            Brasserie, and return for lunch and dinner to savor an international
+            buffet featuring live cooking stations. Delight in the refined
+            ambiance of Sublime, where locally sourced ingredients are
+            transformed into exquisite fine cuisine. Craving a lighter option?
+            Head to Chit Chat for an array of sandwiches, salads, and quiches.
+            In the evenings, unwind with cocktails and live entertainment at
+            either The Blaze Entertainment Lounge & Bar or The Cigar Bar,
+            creating memorable moments with friends and loved ones.
           </p>
         </div>
       </div>

@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
+import axiosInstance from "../../../../../axios";
 
 const FoodOrdersTable = ({ order, index, orderData, user, setOrderData }) => {
-  const { img, foodId, orderId, name, price } = order;
+  const { imageUrl, orderId, name, price } = order;
 
   const handleDeleteOrder = async (orderId) => {
-    console.log("foodID is: ", foodId);
     // alert(`Clicked on ${roomId}`)
-    swal({
+    Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
@@ -15,24 +15,24 @@ const FoodOrdersTable = ({ order, index, orderData, user, setOrderData }) => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const url = `${process.env.REACT_APP_API_SERVER_URL}/order-food/${orderId}`;
-        await fetch(url, {
-          method: "DELETE",
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data));
-        swal("Your order Deleted", {
+        const response = await axiosInstance.delete(`/foods/orders/${orderId}`);
+        console.log(response.data);
+
+        Swal.fire("Your order Deleted", {
           icon: "success",
         });
 
         //this second fetched is use to refresh delete data
-        await fetch(
-          `${process.env.REACT_APP_API_SERVER_URL}/order-food/${user?.email}`
-        )
-          .then((res) => res.json())
-          .then((data) => setOrderData(data?.data));
+        try {
+          const response = await axiosInstance.get(
+            `/foods/orders/${user?.email}`
+          );
+          setOrderData(response.data?.data);
+        } catch (error) {
+          console.error(error);
+        }
       } else {
-        swal("Oder not deleted. You canceled it!");
+        Swal.fire("Oder not deleted. You canceled it!");
       }
     });
   };
@@ -41,9 +41,8 @@ const FoodOrdersTable = ({ order, index, orderData, user, setOrderData }) => {
     <tr>
       <th>{index + 1}</th>
       <td>
-        <img className="w-28 xl:h-20 rounded " src={img} alt="" />
+        <img className="w-28 xl:h-20 rounded " src={imageUrl} alt="" />
       </td>
-      <td>{foodId}</td>
       <td>{orderId}</td>
       <td>{name}</td>
       <td>{price}</td>

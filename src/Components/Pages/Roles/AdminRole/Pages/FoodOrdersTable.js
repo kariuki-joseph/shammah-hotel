@@ -1,12 +1,12 @@
 import React from "react";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const FoodOrdersTable = ({ order, index, setAllOrderData }) => {
-  const { img, foodId, orderId, email, name, price } = order;
+  const { imageUrl, foodId, orderId, email, name, price } = order;
 
   const handleDeleteOrder = async (orderId) => {
     // alert(`Clicked on ${roomId}`)
-    swal({
+    Swal.fire({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this imaginary file!",
       icon: "warning",
@@ -20,7 +20,7 @@ const FoodOrdersTable = ({ order, index, setAllOrderData }) => {
         })
           .then((res) => res.json())
           .then((data) => console.log(data));
-        swal("The order is Deleted", {
+        Swal.fire("The order is Deleted", {
           icon: "success",
         });
 
@@ -31,7 +31,7 @@ const FoodOrdersTable = ({ order, index, setAllOrderData }) => {
           .then((res) => res.json())
           .then((data) => setAllOrderData(data?.data));
       } else {
-        swal("Oder not deleted. You canceled it!");
+        Swal.fire("Oder not deleted. You canceled it!");
       }
     });
   };
@@ -39,13 +39,13 @@ const FoodOrdersTable = ({ order, index, setAllOrderData }) => {
     <tr>
       <th>{index + 1}</th>
       <td>
-        <img className="w-10 xl:w-32 xl:h-20 rounded " src={img} alt="" />
+        <img className="w-10 xl:w-32 xl:h-20 rounded " src={imageUrl} alt="" />
       </td>
       <td>{foodId}</td>
       <td>{orderId}</td>
       <td>{email}</td>
       <td>{name}</td>
-      <td>{price}TK</td>
+      <td>Ksh. {price}</td>
       <td>
         <button
           onClick={() => {

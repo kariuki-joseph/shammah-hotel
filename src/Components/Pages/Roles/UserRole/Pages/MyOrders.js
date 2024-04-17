@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import auth from "../../../../Firebase/firebase.init";
+import { auth } from "../../../../Firebase/firebase.init";
 import Loading from "../../../Shared/Loading";
 import GetOrders from "./GetOrders";
 import { FaHome } from "react-icons/fa";
+import axiosInstance from "../../../../../axios";
 
 const MyOrders = () => {
   const [user, loading] = useAuthState(auth);
@@ -12,11 +13,15 @@ const MyOrders = () => {
   console.log(orderData);
 
   useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_API_SERVER_URL}/orders/room/${user?.email}`
-    )
-      .then((res) => res.json())
-      .then((data) => setOrderData(data?.data));
+    const fetchData = async () => {
+      try {
+      const response = await axiosInstance.get(`/rooms/orders/${user?.email}`);
+      setOrderData(response.data?.data);
+      } catch (error) {
+      console.error('Failed to fetch orders:', error);
+      }
+    };
+    fetchData();
   }, [user?.email, setOrderData]);
   if (loading) {
     return <Loading></Loading>;

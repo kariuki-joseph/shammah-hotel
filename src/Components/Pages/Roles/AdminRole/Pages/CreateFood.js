@@ -1,65 +1,60 @@
 import React from "react";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { MdFoodBank } from "react-icons/md";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
+import { uploadImage } from "../../../../Firebase/firebaseService";
+import axios from "../../../../../axios";
 
 const CreateFood = () => {
-  const imageStorageKey = "52a7c30a95d000395b196c985adb3c83";
-
   const handleAddProduct = async (event) => {
     event.preventDefault();
-    const foodId = `${Math.floor(Math.random() * 1000000) + 1}`
+    const foodId = `${Math.floor(Math.random() * 1000000) + 1}`;
     const name = event.target.name.value;
     const price = event.target.price.value;
+    const quantity = event.target.quantity.value;
     const image = document.querySelector("#img"); // taking image from input
-    const formData = new FormData();
-    formData.append("image", image.files[0]);
-    // formData.append('image', image);
-    const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
-    fetch(url, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          const img = data.data.url; // hosted image link;
-          const product = {
-            foodId: foodId,
-            name: name,
-            price: price,
-            img: img,
-          };
 
-          //send docotr info to my database
-          fetch(
-            `${process.env.REACT_APP_API_SERVER_URL}/foods/add-food`,
-            {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify(product),
-            }
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              if (data?.data?.foodId) {
-                swal(
-                  "Food Successfully Added!",
-                  "Food Successfully added to Database",
-                  "success"
-                );
-                event.target.reset(); //clear form
-              } else {
-                alert("Failed to add");
-              }
-              // console.log("product", inserted);
-            });
-        }
+    const imageUrl = await uploadImage(image.files[0]);
 
-        console.log("iMG BB RESULT", data);
-      });
+    const food = {
+      foodId: foodId,
+      name: name,
+      price: price,
+      quantity: quantity,
+      imageUrl: imageUrl,
+    };
+
+    //send docotr info to my database
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_SERVER_URL}/foods`,
+        food
+      );
+
+      const data = response.data;
+
+      if (data?.data?.foodId) {
+        Swal.fire(
+          "Food Successfully Added!",
+          "Food Successfully added to Database",
+          "success"
+        );
+        event.target.reset(); //clear form
+      } else {
+        Swal.fire(
+          "Failed to Add Food!",
+          "Failed to add food to Database",
+          "error"
+        );
+      }
+    } catch (error) {
+      Swal.fire(
+        "Failed to Add Food!",
+        "Failed to add food to Database",
+        "error"
+      );
+      console.error("Error:", error);
+    }
   };
   // console.log(da
   return (
@@ -93,10 +88,17 @@ const CreateFood = () => {
               placeholder="Enter price"
               className="input input-bordered w-full max-w-lg mb-3"
             />
-            <br />
-            <label htmlFor="image">Upload Image:</label> <br />
+            <label htmlFor="price">Quantity(Units)</label> <br />
             <input
-              className="input w-full max-w-xs mb-3"
+              type="number"
+              name="quantity"
+              placeholder="Enter food quantity in units e.g. 1,2,3"
+              className="input input-bordered w-full max-w-lg mb-3 mt-1"
+            />
+            <br />
+            <label htmlFor="image">Food Cover Image:</label> <br />
+            <input
+              className="input w-full max-w-xs mb-3 mt-1"
               name="img"
               id="img"
               type="file"

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { MdOutlinePhoneCallback } from "react-icons/md";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { Link, useNavigate } from 'react-router-dom';
-import auth from '../../Firebase/firebase.init';
+import {auth} from '../../Firebase/firebase.init';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { signOut } from 'firebase/auth';
 import useAdmin from '../../Hooks/useAdmin';
@@ -26,7 +26,10 @@ const NavbarTwo = () => {
         <div className=' text-white mx-auto xl:rounded-2xl lg:px-28 z-10 sticky top-0 shadow-none py-2'>
             <nav className='flex h-[80px] w-full xl:w-[1100px] items-center justify-between custom-container mx-auto '>
                 <Link to="/">
-                    <img className='w-20' src="https://i.postimg.cc/vBD99T39/logos.png" alt="" />
+                    <img style={ {
+                        width: '350px',
+                        height: 'auto'
+                    }} src="/images/logo.png" alt="" />
                 </Link>
                 <div onClick={()=>setOpen(!open)} className='absolute right-8 top-6 cursor-pointer md:hidden w-7 h-7 text-black'>
                 {
