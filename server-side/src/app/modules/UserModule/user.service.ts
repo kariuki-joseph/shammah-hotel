@@ -32,7 +32,7 @@ const getAllUserFromDB = async() => {
 }
 
 const checkAdminFromDB = async(email: string) => {
-  const user =  User.findOne({email: email},{role: true});
+  const user =  User.findOne({email: email},{role: "admin"});
   // console.log(user)
   // const isAdmin = user === 'admin';
   return user;
