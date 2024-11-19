@@ -11,6 +11,7 @@ sendMail.ts
 sendMail.js
 /.pnp
 .pnp.js
+.vscode
 
 # testing
 /coverage
